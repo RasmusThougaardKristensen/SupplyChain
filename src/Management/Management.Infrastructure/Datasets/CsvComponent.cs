@@ -12,16 +12,36 @@ namespace SupplyChain.Management.Infrastructure.Datasets;
 public sealed class CsvComponent : ICsvComponent
 {
     private const string setsPath = "/Users/rasmuskristensen/RiderProjects/SupplyChain/src/Management/Management.Infrastructure/Datasets/sets.csv";
+    private const string stocksPath = "/Users/rasmuskristensen/RiderProjects/SupplyChain/src/Management/Management.Infrastructure/Datasets/stock.csv";
     public SetModel? GetSetBySku(Sku sku)
     {
-        using var reader = new StringReader(File.ReadAllText(setsPath));
-        using var csv = new CsvReader(reader, CultureInfo.InvariantCulture);
-        csv.Context.RegisterClassMap<LegoSetCsvMap>();
-        var setEntities = csv.GetRecords<SetEntity>();
+        var setEntities = ReadSetsFromCsv();
 
         var entity = setEntities.FirstOrDefault(setEntity => setEntity.SKU == sku.Id);
 
         return entity is null ? null : ToModel(entity);
+    }
+
+    public IReadOnlyList<WarehouseModel> GetWarehouses(Sku sku, StateType stateType)
+    {
+        var setEntities = ReadSetsFromCsv();
+        var stockEntities = ReadStocksFromCsv();
+
+        var availableSets = setEntities.Where(set => set.State == stateType.ToString());
+
+        var warehouses = stockEntities.Where(stockEntity => availableSets.Any(availableSetEntity => availableSetEntity.SKU == stockEntity.SKU));
+
+        return GroupWarehouses(warehouses);
+    }
+
+    private IReadOnlyList<WarehouseModel> GroupWarehouses(IEnumerable<StockEntity> warehouses)
+    {
+        var warehouseGroups = warehouses.
+            GroupBy(stock => stock.Warehouse)
+            .Select(warehouseGroup => ToModel(warehouseGroup, warehouseGroup.Key))
+            .ToList();
+
+        return warehouseGroups;
     }
 
     private SetModel ToModel(SetEntity entity)
@@ -35,10 +55,53 @@ public sealed class CsvComponent : ICsvComponent
             pieces: entity.PieceCount,
             uom: new Uom(entity.Uom),
             releaseYear: entity.ReleaseYear.ToString(),
-            state: entity.State
+            state: StateType.From(entity.State)
         );
 
         return legoSet;
+    }
+
+    private WarehouseModel ToModel(IEnumerable<StockEntity> entities, string warehouseLocation)
+    {
+        var stocks = new List<Stock>();
+        foreach (var stockEntity in entities)
+        {
+            var stock = new Stock(
+                new Sku(stockEntity.SKU),
+                stockEntity.Quantity,
+                ParseDeliveryDate(stockEntity.DeliveryDate),
+                new Uom(stockEntity.Uom),
+                new StockPlacement(stockEntity.Placement, stockEntity.Shelf));
+
+            stocks.Add(stock);
+        }
+
+        var inventory = new Inventory(stocks);
+        var warehouse = new WarehouseModel(
+            location: warehouseLocation,
+            inventory: inventory
+        );
+
+        return warehouse;
+    }
+    private static IReadOnlyList<SetEntity> ReadSetsFromCsv()
+    {
+        using var reader = new StringReader(File.ReadAllText(setsPath));
+        using var csv = new CsvReader(reader, CultureInfo.InvariantCulture);
+        csv.Context.RegisterClassMap<LegoSetCsvMap>();
+        var setEntities = csv.GetRecords<SetEntity>();
+
+        return setEntities.ToList();
+    }
+
+    private static IReadOnlyList<StockEntity> ReadStocksFromCsv()
+    {
+        using var reader = new StringReader(File.ReadAllText(stocksPath));
+        using var csv = new CsvReader(reader, CultureInfo.InvariantCulture);
+        csv.Context.RegisterClassMap<StockCsvMap>();
+        var stockEntities = csv.GetRecords<StockEntity>();
+
+        return stockEntities.ToList();
     }
 
     public IReadOnlyList<SetModel> GetAllSets(string path)
