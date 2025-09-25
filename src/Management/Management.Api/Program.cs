@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Microsoft.OpenApi.Models;
 using SupplyChain.Management.Application;
 using SupplyChain.Management.Infrastructure;
 
@@ -13,12 +14,10 @@ class Program
         var builder = WebApplication.CreateBuilder(args);
 
         builder.Services.AddControllers();
-        builder.Services.AddOpenApi();
         builder.Services.AddSwaggerGen();
 
-
         builder.Services.AddRepositories();
-
+        builder.Services.AddComponents();
         builder.Services.AddApplicationServices();
         builder.Services.AddUseCases();
 
@@ -26,17 +25,19 @@ class Program
 
         if (app.Environment.IsDevelopment())
         {
-            app.MapOpenApi();
             app.UseSwagger();
-            app.UseSwaggerUI(options =>
+            app.UseSwaggerUI(c =>
             {
-                options.RoutePrefix = string.Empty;
+                c.SwaggerEndpoint("/swagger/v1/swagger.json", "Supply Chain Management API v1");
+                c.RoutePrefix = string.Empty;
             });
         }
 
         app.UseHttpsRedirection();
-
+        app.UseRouting();
         app.UseAuthorization();
+
+        app.MapControllers();
 
         await app.RunAsync();
     }
