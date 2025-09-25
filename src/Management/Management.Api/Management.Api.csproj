@@ -8,4 +8,19 @@
         <RootNamespace>SupplyChain.Management.Api</RootNamespace>
     </PropertyGroup>
 
+    <ItemGroup>
+      <PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="9.0.9" />
+      <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="9.0.9" />
+      <PackageReference Include="Swashbuckle.AspNetCore" Version="9.0.4" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <ProjectReference Include="..\Management.Application\Management.Application.csproj" />
+      <ProjectReference Include="..\Management.Infrastructure\Management.Infrastructure.csproj" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <Folder Include="Endpoints\" />
+    </ItemGroup>
+
 </Project>
