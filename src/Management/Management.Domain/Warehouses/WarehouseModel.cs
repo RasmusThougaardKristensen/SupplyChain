@@ -1,4 +1,6 @@
-namespace SupplyChain.Management.Domain.Warehouse;
+using SupplyChain.Management.Domain.Warehouse;
+
+namespace SupplyChain.Management.Domain.Warehouses;
 
 public class WarehouseModel
 {

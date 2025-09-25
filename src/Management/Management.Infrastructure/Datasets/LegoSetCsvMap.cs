@@ -2,7 +2,7 @@ using CsvHelper.Configuration;
 
 namespace SupplyChain.Management.Infrastructure.Datasets;
 
-public sealed class LegoSetCsvMap : ClassMap<LegoSetEntity>
+public sealed class LegoSetCsvMap : ClassMap<SetEntity>
 {
     public LegoSetCsvMap()
     {

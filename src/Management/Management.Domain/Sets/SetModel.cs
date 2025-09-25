@@ -1,6 +1,8 @@
-namespace SupplyChain.Management.Domain.LegoSet;
+using SupplyChain.Management.Domain.LegoSet;
 
-public sealed class LegoSetModel
+namespace SupplyChain.Management.Domain.Sets;
+
+public sealed class SetModel
 {
     public Sku Sku { get; }
     public string Name { get; }
@@ -12,7 +14,7 @@ public sealed class LegoSetModel
     public string ReleaseYear { get; }
     public string State { get; }
 
-    public LegoSetModel(Sku sku, string name, string theme, int weight, string rating, int pieces, Uom uom, string releaseYear, string state)
+    public SetModel(Sku sku, string name, string theme, int weight, string rating, int pieces, Uom uom, string releaseYear, string state)
     {
         Sku = sku;
         Name = name;

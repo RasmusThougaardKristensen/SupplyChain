@@ -1,6 +1,6 @@
 using SupplyChain.Management.Domain.LegoSet;
 
-namespace SupplyChain.Management.Domain.Warehouse.Stocks;
+namespace SupplyChain.Management.Domain.Warehouses.Stocks;
 
 public sealed record Stock
 {

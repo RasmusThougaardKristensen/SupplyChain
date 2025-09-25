@@ -1,8 +1,9 @@
 using SupplyChain.Management.Domain.LegoSet;
+using SupplyChain.Management.Domain.Sets;
 
 namespace SupplyChain.Management.Application.Components;
 
 public interface ICsvComponent
 {
-    LegoSetModel? GetSetBySku(Sku sku);
+    SetModel? GetSetBySku(Sku sku);
 }

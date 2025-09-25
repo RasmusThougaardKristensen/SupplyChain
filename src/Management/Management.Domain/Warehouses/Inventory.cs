@@ -1,4 +1,4 @@
-using SupplyChain.Management.Domain.Warehouse.Stocks;
+using SupplyChain.Management.Domain.Warehouses.Stocks;
 
 namespace SupplyChain.Management.Domain.Warehouse;
 

@@ -1,4 +1,4 @@
-namespace SupplyChain.Management.Domain.Warehouse.Stocks;
+namespace SupplyChain.Management.Domain.Warehouses.Stocks;
 
 public sealed record StockPlacement
 {

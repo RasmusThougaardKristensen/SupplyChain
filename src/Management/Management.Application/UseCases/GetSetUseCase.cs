@@ -1,5 +1,6 @@
 using SupplyChain.Management.Application.Components;
 using SupplyChain.Management.Domain.LegoSet;
+using SupplyChain.Management.Domain.Sets;
 
 namespace SupplyChain.Management.Application.UseCases;
 
@@ -12,7 +13,7 @@ public class GetSetUseCase : IGetSetUseCase
         _csvComponent = csvComponent;
     }
 
-    public LegoSetModel? GetSetBySku(Sku sku)
+    public SetModel? GetSetBySku(Sku sku)
     {
         return _csvComponent.GetSetBySku(sku);
     }

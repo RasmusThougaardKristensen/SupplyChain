@@ -1,4 +1,5 @@
 using SupplyChain.Management.Domain.LegoSet;
+using SupplyChain.Management.Domain.Sets;
 
 namespace SupplyChain.Management.Api.Endpoints;
 
@@ -14,16 +15,16 @@ public sealed record SetResponse
     public string ReleaseYear { get; }
     public string State { get; }
 
-    public SetResponse(LegoSetModel legoSet)
+    public SetResponse(SetModel set)
     {
-        Sku = legoSet.Sku.Id;
-        Name = legoSet.Name;
-        Theme = legoSet.Theme;
-        Weight = legoSet.Weight;
-        Rating = legoSet.Rating;
-        Pieces = legoSet.Pieces;
-        Uom = legoSet.Uom.Id;
-        ReleaseYear = legoSet.ReleaseYear;
-        State = legoSet.State;
+        Sku = set.Sku.Id;
+        Name = set.Name;
+        Theme = set.Theme;
+        Weight = set.Weight;
+        Rating = set.Rating;
+        Pieces = set.Pieces;
+        Uom = set.Uom.Id;
+        ReleaseYear = set.ReleaseYear;
+        State = set.State;
     }
 }

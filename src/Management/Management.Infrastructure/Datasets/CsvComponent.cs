@@ -2,29 +2,31 @@ using System.Globalization;
 using CsvHelper;
 using SupplyChain.Management.Application.Components;
 using SupplyChain.Management.Domain.LegoSet;
+using SupplyChain.Management.Domain.Sets;
 using SupplyChain.Management.Domain.Warehouse;
-using SupplyChain.Management.Domain.Warehouse.Stocks;
+using SupplyChain.Management.Domain.Warehouses;
+using SupplyChain.Management.Domain.Warehouses.Stocks;
 
 namespace SupplyChain.Management.Infrastructure.Datasets;
 
 public sealed class CsvComponent : ICsvComponent
 {
     private const string setsPath = "/Users/rasmuskristensen/RiderProjects/SupplyChain/src/Management/Management.Infrastructure/Datasets/sets.csv";
-    public LegoSetModel? GetSetBySku(Sku sku)
+    public SetModel? GetSetBySku(Sku sku)
     {
         using var reader = new StringReader(File.ReadAllText(setsPath));
         using var csv = new CsvReader(reader, CultureInfo.InvariantCulture);
         csv.Context.RegisterClassMap<LegoSetCsvMap>();
-        var setEntities = csv.GetRecords<LegoSetEntity>();
+        var setEntities = csv.GetRecords<SetEntity>();
 
         var entity = setEntities.FirstOrDefault(setEntity => setEntity.SKU == sku.Id);
 
         return entity is null ? null : ToModel(entity);
     }
 
-    private LegoSetModel ToModel(LegoSetEntity entity)
+    private SetModel ToModel(SetEntity entity)
     {
-        var legoSet = new LegoSetModel(
+        var legoSet = new SetModel(
             sku: new Sku(entity.SKU),
             name: entity.Name,
             theme: entity.Theme,
@@ -39,15 +41,15 @@ public sealed class CsvComponent : ICsvComponent
         return legoSet;
     }
 
-    public IReadOnlyList<LegoSetModel> ReadLegoSets(string path)
+    public IReadOnlyList<SetModel> GetAllSets(string path)
     {
-        var legoSets = new List<LegoSetModel>();
+        var legoSets = new List<SetModel>();
 
         using var reader = new StringReader(File.ReadAllText(path));
         using var csv = new CsvReader(reader, CultureInfo.InvariantCulture);
 
         csv.Context.RegisterClassMap<LegoSetCsvMap>();
-        var records = csv.GetRecords<LegoSetEntity>();
+        var records = csv.GetRecords<SetEntity>();
 
         foreach (var record in records)
         {
@@ -57,7 +59,7 @@ public sealed class CsvComponent : ICsvComponent
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"Error processing LegoSet record SKU {record.SKU}: {ex.Message}");
+                Console.WriteLine($"Error processing Sets record SKU {record.SKU}: {ex.Message}");
             }
         }
 
@@ -127,8 +129,7 @@ public sealed class CsvComponent : ICsvComponent
             return result;
         }
 
-        // Try different date formats if needed
-        string[] formats = { "yyyy-MM-dd", "MM/dd/yyyy", "dd/MM/yyyy" };
+        string[] formats = { "yyyy-MM-dd" };
         foreach (var format in formats)
         {
             if (DateTime.TryParseExact(dateString, format, CultureInfo.InvariantCulture, DateTimeStyles.None, out result))
@@ -138,12 +139,5 @@ public sealed class CsvComponent : ICsvComponent
         }
 
         throw new FormatException($"Unable to parse date: {dateString}");
-    }
-
-    private Uom ParseUom(string uomString)
-    {
-        // Implement based on your Uom class structure
-        // This is a placeholder - adjust according to your Uom implementation
-        return new Uom(uomString ?? "each");
     }
 }
