@@ -45,7 +45,7 @@ public sealed class CsvComponent
         return legoSets;
     }
 
-    public List<WarehouseModel> ReadWarehouses(string stockFilePath)
+    public IReadOnlyList<WarehouseModel> ReadWarehouses(string stockFilePath)
     {
         var stockRecords = ReadStockRecords(stockFilePath);
         var warehouses = new List<WarehouseModel>();
