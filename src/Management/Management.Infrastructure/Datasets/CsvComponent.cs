@@ -1,13 +1,44 @@
 using System.Globalization;
 using CsvHelper;
+using SupplyChain.Management.Application.Components;
 using SupplyChain.Management.Domain.LegoSet;
 using SupplyChain.Management.Domain.Warehouse;
 using SupplyChain.Management.Domain.Warehouse.Stocks;
 
 namespace SupplyChain.Management.Infrastructure.Datasets;
 
-public sealed class CsvComponent
+public sealed class CsvComponent : ICsvComponent
 {
+    private const string setsPath = "/Users/rasmuskristensen/RiderProjects/SupplyChain/src/Management/Management.Infrastructure/Datasets/sets.csv";
+    public LegoSetModel? GetSetBySku(Sku sku)
+    {
+        using var reader = new StringReader(File.ReadAllText(setsPath));
+        using var csv = new CsvReader(reader, CultureInfo.InvariantCulture);
+        csv.Context.RegisterClassMap<LegoSetCsvMap>();
+        var setEntities = csv.GetRecords<LegoSetEntity>();
+
+        var entity = setEntities.FirstOrDefault(setEntity => setEntity.SKU == sku.Id);
+
+        return entity is null ? null : ToModel(entity);
+    }
+
+    private LegoSetModel ToModel(LegoSetEntity entity)
+    {
+        var legoSet = new LegoSetModel(
+            sku: new Sku(entity.SKU),
+            name: entity.Name,
+            theme: entity.Theme,
+            weight: entity.Weight,
+            rating: entity.Rating,
+            pieces: entity.PieceCount,
+            uom: new Uom(entity.Uom),
+            releaseYear: entity.ReleaseYear.ToString(),
+            state: entity.State
+        );
+
+        return legoSet;
+    }
+
     public IReadOnlyList<LegoSetModel> ReadLegoSets(string path)
     {
         var legoSets = new List<LegoSetModel>();
@@ -22,19 +53,7 @@ public sealed class CsvComponent
         {
             try
             {
-                var legoSet = new LegoSetModel(
-                    sku: new Sku(record.SKU),
-                    name: record.Name,
-                    theme: record.Theme,
-                    weight: record.Weight,
-                    rating: record.Rating,
-                    pieces: record.PieceCount,
-                    uom: new Uom(record.Uom),
-                    releaseYear: record.ReleaseYear.ToString(),
-                    state: record.State
-                );
-
-                legoSets.Add(legoSet);
+                legoSets.Add(ToModel(record));
             }
             catch (Exception ex)
             {
