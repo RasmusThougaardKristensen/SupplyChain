@@ -12,9 +12,9 @@ public sealed class SetModel
     public int Pieces { get; }
     public Uom Uom { get; }
     public string ReleaseYear { get; }
-    public string State { get; }
+    public StateType State { get; }
 
-    public SetModel(Sku sku, string name, string theme, int weight, string rating, int pieces, Uom uom, string releaseYear, string state)
+    public SetModel(Sku sku, string name, string theme, int weight, string rating, int pieces, Uom uom, string releaseYear, StateType state)
     {
         Sku = sku;
         Name = name;

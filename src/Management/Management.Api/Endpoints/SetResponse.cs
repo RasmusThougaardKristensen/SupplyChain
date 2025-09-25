@@ -25,6 +25,6 @@ public sealed record SetResponse
         Pieces = set.Pieces;
         Uom = set.Uom.Id;
         ReleaseYear = set.ReleaseYear;
-        State = set.State;
+        State = set.State.ToString();
     }
 }
