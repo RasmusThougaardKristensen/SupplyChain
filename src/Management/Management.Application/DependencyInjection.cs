@@ -13,6 +13,7 @@ public static class DependencyInjection
     public static IServiceCollection AddUseCases(this IServiceCollection services)
     {
         services.AddScoped<IGetSetUseCase, GetSetUseCase>();
+        services.AddScoped<IGetWarehouseUseCase, GetWarehouseUseCase>();
         return services;
     }
 }
