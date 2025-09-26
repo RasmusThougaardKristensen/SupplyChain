@@ -14,7 +14,11 @@ class Program
         var builder = WebApplication.CreateBuilder(args);
 
         builder.Services.AddControllers();
-        builder.Services.AddSwaggerGen();
+        builder.Services.AddSwaggerGen(options =>
+        {
+            options.SupportNonNullableReferenceTypes();
+            options.EnableAnnotations();
+        });
 
         builder.Services.AddRepositories();
         builder.Services.AddComponents();
