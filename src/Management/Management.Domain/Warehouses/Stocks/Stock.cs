@@ -1,4 +1,4 @@
-using SupplyChain.Management.Domain.LegoSet;
+using SupplyChain.Management.Domain.LegoSets;
 
 namespace SupplyChain.Management.Domain.Warehouses.Stocks;
 

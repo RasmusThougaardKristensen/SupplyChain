@@ -1,6 +1,4 @@
-using System.Diagnostics;
-
-namespace SupplyChain.Management.Domain.Sets;
+namespace SupplyChain.Management.Domain.LegoSets;
 
 public sealed record StateType
 {

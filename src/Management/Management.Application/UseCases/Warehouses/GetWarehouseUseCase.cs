@@ -1,9 +1,8 @@
 using SupplyChain.Management.Application.Components;
-using SupplyChain.Management.Domain.LegoSet;
-using SupplyChain.Management.Domain.Sets;
+using SupplyChain.Management.Domain.LegoSets;
 using SupplyChain.Management.Domain.Warehouses;
 
-namespace SupplyChain.Management.Application.UseCases;
+namespace SupplyChain.Management.Application.UseCases.Warehouses;
 
 public class GetWarehouseUseCase : IGetWarehouseUseCase
 {

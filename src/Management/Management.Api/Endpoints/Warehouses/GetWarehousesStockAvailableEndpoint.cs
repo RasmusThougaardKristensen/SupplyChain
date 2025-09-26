@@ -1,8 +1,8 @@
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using SupplyChain.Management.Api.Endpoints.LegoSets;
 using SupplyChain.Management.Application.UseCases;
-using SupplyChain.Management.Domain.LegoSet;
-using SupplyChain.Management.Domain.Sets;
+using SupplyChain.Management.Domain.LegoSets;
 using Swashbuckle.AspNetCore.Annotations;
 
 namespace SupplyChain.Management.Api.Endpoints.Warehouses;
@@ -24,9 +24,9 @@ public class GetWarehousesStockAvailableEndpoint : ControllerBase
     [SwaggerOperation(
         Summary =  "Get a list of warehouses with available stock for given SKUs. Available are based on the state of the lego set",
         OperationId = nameof(GetWarehousesStockAvailable),
-        Tags = [Constants.ApiTags.Warehouses])]
+        Tags = [Constants.ApiTags.Warehouse])]
 
-    public ActionResult<SetResponse> GetWarehousesStockAvailable([FromQuery] WarehouseStockRequest request)
+    public ActionResult<LegoSetResponse> GetWarehousesStockAvailable([FromQuery] WarehouseStockRequest request)
     {
         var warehouses = _getWarehouseUseCase.GetWarehouses(new Sku(request.Sku), StateType.From(request.State));
 

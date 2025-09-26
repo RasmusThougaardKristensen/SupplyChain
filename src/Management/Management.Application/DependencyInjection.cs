@@ -1,5 +1,7 @@
 using Microsoft.Extensions.DependencyInjection;
 using SupplyChain.Management.Application.UseCases;
+using SupplyChain.Management.Application.UseCases.LegoSets;
+using SupplyChain.Management.Application.UseCases.Warehouses;
 
 namespace SupplyChain.Management.Application;
 
@@ -12,7 +14,7 @@ public static class DependencyInjection
 
     public static IServiceCollection AddUseCases(this IServiceCollection services)
     {
-        services.AddScoped<IGetSetUseCase, GetSetUseCase>();
+        services.AddScoped<IGetLegoSetUseCase, GetLegoSetUseCase>();
         services.AddScoped<IGetWarehouseUseCase, GetWarehouseUseCase>();
         return services;
     }

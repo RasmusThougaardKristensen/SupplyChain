@@ -1,6 +1,6 @@
 using SupplyChain.Management.Domain.Common;
 
-namespace SupplyChain.Management.Domain.LegoSet;
+namespace SupplyChain.Management.Domain.LegoSets;
 
 public sealed record Uom : StringId
 {

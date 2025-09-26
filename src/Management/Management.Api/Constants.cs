@@ -4,6 +4,7 @@ public static class Constants
 {
     public static class ApiTags
     {
-        public const string Warehouses = "Warehouses";
+        public const string Warehouse = "Warehouse";
+        public const string LegoSet = "LegoSet";
     }
 }

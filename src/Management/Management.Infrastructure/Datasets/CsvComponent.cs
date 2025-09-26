@@ -1,8 +1,7 @@
 using System.Globalization;
 using CsvHelper;
 using SupplyChain.Management.Application.Components;
-using SupplyChain.Management.Domain.LegoSet;
-using SupplyChain.Management.Domain.Sets;
+using SupplyChain.Management.Domain.LegoSets;
 using SupplyChain.Management.Domain.Warehouse;
 using SupplyChain.Management.Domain.Warehouses;
 using SupplyChain.Management.Domain.Warehouses.Stocks;
@@ -13,7 +12,7 @@ public sealed class CsvComponent : ICsvComponent
 {
     private const string setsPath = "/Users/rasmuskristensen/RiderProjects/SupplyChain/src/Management/Management.Infrastructure/Datasets/sets.csv";
     private const string stocksPath = "/Users/rasmuskristensen/RiderProjects/SupplyChain/src/Management/Management.Infrastructure/Datasets/stock.csv";
-    public SetModel? GetSetBySku(Sku sku)
+    public LegoSetModel? GetSetBySku(Sku sku)
     {
         var setEntities = ReadSetsFromCsv();
 
@@ -44,9 +43,9 @@ public sealed class CsvComponent : ICsvComponent
         return warehouseGroups;
     }
 
-    private SetModel ToModel(SetEntity entity)
+    private LegoSetModel ToModel(SetEntity entity)
     {
-        var legoSet = new SetModel(
+        var legoSet = new LegoSetModel(
             sku: new Sku(entity.SKU),
             name: entity.Name,
             theme: entity.Theme,
@@ -104,9 +103,9 @@ public sealed class CsvComponent : ICsvComponent
         return stockEntities.ToList();
     }
 
-    public IReadOnlyList<SetModel> GetAllSets(string path)
+    public IReadOnlyList<LegoSetModel> GetAllSets(string path)
     {
-        var legoSets = new List<SetModel>();
+        var legoSets = new List<LegoSetModel>();
 
         using var reader = new StringReader(File.ReadAllText(path));
         using var csv = new CsvReader(reader, CultureInfo.InvariantCulture);
@@ -122,7 +121,7 @@ public sealed class CsvComponent : ICsvComponent
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"Error processing Sets record SKU {record.SKU}: {ex.Message}");
+                Console.WriteLine($"Error processing LegoSets record SKU {record.SKU}: {ex.Message}");
             }
         }
 
