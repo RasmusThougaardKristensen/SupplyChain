@@ -6,5 +6,6 @@ public static class Constants
     {
         public const string Warehouse = "Warehouse";
         public const string LegoSet = "LegoSet";
+        public const string Order = "Order";
     }
 }
