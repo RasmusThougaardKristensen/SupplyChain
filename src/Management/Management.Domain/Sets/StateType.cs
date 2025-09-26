@@ -10,7 +10,8 @@ public sealed record StateType
 
     public static StateType From(string state)
     {
-        return state switch
+
+        return state.ToUpper() switch
         {
             "ACTIVE" => Active,
             "RETIRED" => Retired,

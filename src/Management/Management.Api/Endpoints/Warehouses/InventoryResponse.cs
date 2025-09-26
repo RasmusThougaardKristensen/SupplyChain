@@ -1,6 +1,6 @@
 using SupplyChain.Management.Domain.Warehouse;
 
-namespace SupplyChain.Management.Api.Endpoints;
+namespace SupplyChain.Management.Api.Endpoints.Warehouses;
 
 public record InventoryResponse
 {
