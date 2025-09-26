@@ -3,8 +3,8 @@ namespace SupplyChain.Management.Domain.LegoSets;
 public sealed record StateType
 {
     public static readonly StateType Active = new("ACTIVE");
-    private static readonly StateType Retired = new("RETIRED");
-    private static readonly StateType Unreleased = new("UNRELEASED");
+    public static readonly StateType Retired = new("RETIRED");
+    public static readonly StateType Unreleased = new("UNRELEASED");
 
     public static StateType From(string state)
     {
