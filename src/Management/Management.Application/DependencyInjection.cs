@@ -20,6 +20,7 @@ public static class DependencyInjection
         services.AddScoped<IGetWarehouseUseCase, GetWarehouseUseCase>();
         services.AddScoped<IGetOrderUseCase, GetOrderUseCase>();
         services.AddScoped<IRegisterShipmentToWarehouseUseCase, RegisterShipmentToWarehouseUseCase>();
+        services.AddScoped<IRegisterShipmentToCustomerUseCase, RegisterShipmentToCustomerUseCase>();
         return services;
     }
 }
