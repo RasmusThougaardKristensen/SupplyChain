@@ -14,7 +14,7 @@ public class RegisterShipmentToWarehouseUseCase : IRegisterShipmentToWarehouseUs
         _csvComponent = csvComponent;
     }
 
-    public WarehouseModel? RegisterIncomingShipmentToWarehouse(WarehouseLocation targetWarehouseLocation, Sku sku, int quantity)
+    public WarehouseModel? RegisterReceiptShipmentToWarehouse(WarehouseLocation targetWarehouseLocation, Sku sku, int quantity)
     {
         var targetWarehouse = _csvComponent.GetWarehouseByLocation(targetWarehouseLocation);
         if (targetWarehouse is null)

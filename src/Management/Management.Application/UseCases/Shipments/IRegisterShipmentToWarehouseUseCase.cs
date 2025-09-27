@@ -6,5 +6,5 @@ namespace SupplyChain.Management.Application.UseCases.Shipments;
 
 public interface IRegisterShipmentToWarehouseUseCase
 {
-    WarehouseModel? RegisterIncomingShipmentToWarehouse(WarehouseLocation targetWarehouseLocation, Sku sku, int quantity);
+    WarehouseModel? RegisterReceiptShipmentToWarehouse(WarehouseLocation targetWarehouseLocation, Sku sku, int quantity);
 }

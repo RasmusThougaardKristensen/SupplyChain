@@ -9,26 +9,27 @@ using Swashbuckle.AspNetCore.Annotations;
 namespace SupplyChain.Management.Api.Endpoints.Shipments;
 
 [ApiController]
-public class RegisterIncomingShipmentEndpoint : ControllerBase
+public class RegisterReceiptShipmentEndpoint : ControllerBase
 {
     private readonly IRegisterShipmentToWarehouseUseCase _registerShipmentToWarehouseUseCase;
 
-    public RegisterIncomingShipmentEndpoint(IRegisterShipmentToWarehouseUseCase registerShipmentToWarehouseUseCase)
+    public RegisterReceiptShipmentEndpoint(IRegisterShipmentToWarehouseUseCase registerShipmentToWarehouseUseCase)
     {
         _registerShipmentToWarehouseUseCase = registerShipmentToWarehouseUseCase;
     }
 
-    [HttpPost("v1/warehouses/{location}/shipments")]
+    [HttpPost("v1/warehouses/{location}/receipts")]
     [ProducesResponseType(typeof(WarehouseResponse), StatusCodes.Status200OK)]
     [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status404NotFound)]
     [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status500InternalServerError)]
     [SwaggerOperation(
-        Summary = "Register incoming shipment to increase warehouse stock level",
-        OperationId = nameof(RegisterShipmentToWarehouse),
+        Summary = "Register receipt shipment to increase warehouse stock level",
+        Description = "Records receipt of goods arriving at the warehouse from suppliers",
+        OperationId = nameof(RegisterReceiptShipmentToWarehouse),
         Tags = [Constants.ApiTags.Shipment])]
-    public ActionResult RegisterShipmentToWarehouse([FromRoute] string location, [FromBody] RegisterShipmentRequest request)
+    public ActionResult RegisterReceiptShipmentToWarehouse([FromRoute] string location, [FromBody] RegisterShipmentRequest request)
     {
-        var warehouse = _registerShipmentToWarehouseUseCase.RegisterIncomingShipmentToWarehouse(
+        var warehouse = _registerShipmentToWarehouseUseCase.RegisterReceiptShipmentToWarehouse(
             new WarehouseLocation(location),
             new Sku(request.Stock.Sku),
             request.Stock.Quantity);
