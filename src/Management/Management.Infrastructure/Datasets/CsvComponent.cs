@@ -2,7 +2,6 @@ using System.Globalization;
 using CsvHelper;
 using SupplyChain.Management.Application.Components;
 using SupplyChain.Management.Domain.LegoSets;
-using SupplyChain.Management.Domain.Warehouse;
 using SupplyChain.Management.Domain.Warehouses;
 using SupplyChain.Management.Domain.Warehouses.Stocks;
 
@@ -23,14 +22,29 @@ public sealed class CsvComponent : ICsvComponent
 
     public IReadOnlyList<WarehouseModel> GetWarehouses(Sku sku, StateType stateType)
     {
-        var setEntities = ReadSetsFromCsv();
+        var legoSetEntities = ReadSetsFromCsv();
         var stockEntities = ReadStocksFromCsv();
 
-        var availableSets = setEntities.Where(set => set.State == stateType.ToString());
+        var availableSets = legoSetEntities.Where(set => set.State == stateType.ToString());
 
         var warehouses = stockEntities.Where(stockEntity => availableSets.Any(availableSetEntity => availableSetEntity.SKU == stockEntity.SKU));
 
         return GroupWarehouses(warehouses);
+    }
+
+    public WarehouseModel? GetWarehouseByLocation(WarehouseLocation location)
+    {
+        var stockEntities = ReadStocksFromCsv();
+        var warehouse = stockEntities.FirstOrDefault(stock => stock.Warehouse == location.Id);
+
+        if (warehouse is null)
+        {
+            return null;
+        }
+
+        var stocks = stockEntities.Where(x => x.Warehouse == warehouse.Warehouse);
+
+        return ToModel(stocks, warehouse.Warehouse);
     }
 
     private IReadOnlyList<WarehouseModel> GroupWarehouses(IEnumerable<StockEntity> warehouses)
@@ -60,10 +74,10 @@ public sealed class CsvComponent : ICsvComponent
         return legoSet;
     }
 
-    private WarehouseModel ToModel(IEnumerable<StockEntity> entities, string warehouseLocation)
+    private WarehouseModel ToModel(IEnumerable<StockEntity> stockEntities, string warehouseLocation)
     {
         var stocks = new List<Stock>();
-        foreach (var stockEntity in entities)
+        foreach (var stockEntity in stockEntities)
         {
             var stock = new Stock(
                 new Sku(stockEntity.SKU),
@@ -77,7 +91,7 @@ public sealed class CsvComponent : ICsvComponent
 
         var inventory = new Inventory(stocks);
         var warehouse = new WarehouseModel(
-            location: warehouseLocation,
+            location: new WarehouseLocation(warehouseLocation),
             inventory: inventory
         );
 
@@ -161,7 +175,7 @@ public sealed class CsvComponent : ICsvComponent
 
             var inventory = new Inventory(stocks);
             var warehouse = new WarehouseModel(
-                location: warehouseGroup.Key, // Using warehouse name as location
+                location: new WarehouseLocation(warehouseGroup.Key), // Using warehouse name as location
                 inventory: inventory
             );
 

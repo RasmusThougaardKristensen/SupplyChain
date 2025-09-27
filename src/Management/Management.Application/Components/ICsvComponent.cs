@@ -7,4 +7,5 @@ public interface ICsvComponent
 {
     LegoSetModel? GetSetBySku(Sku sku);
     IReadOnlyList<WarehouseModel> GetWarehouses(Sku sku, StateType stateType);
+    WarehouseModel? GetWarehouseByLocation(WarehouseLocation location);
 }
