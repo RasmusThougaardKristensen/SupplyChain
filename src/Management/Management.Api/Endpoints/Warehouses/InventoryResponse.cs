@@ -1,4 +1,4 @@
-using SupplyChain.Management.Domain.Warehouse;
+using SupplyChain.Management.Domain.Warehouses;
 
 namespace SupplyChain.Management.Api.Endpoints.Warehouses;
 

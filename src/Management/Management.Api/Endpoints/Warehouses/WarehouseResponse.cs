@@ -11,7 +11,7 @@ public record WarehouseResponse
     public WarehouseResponse(WarehouseModel warehouse)
     {
         Id = warehouse.WarehouseId.Uid;
-        Location = warehouse.Location;
+        Location = warehouse.Location.Id;
         Inventory = new InventoryResponse(warehouse.Inventory);
     }
 }

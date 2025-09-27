@@ -30,3 +30,8 @@ The API must be able to respond to 3 or more of the following queries and update
 
 - To provide data for a clearance sale, make it possible to query a warehouse for SKUs that have at most X units in stock. For bonus points, make it possible to filter by weight as well to get rid of the bigger sets first.
 - Get a summary of a warehouse's stock. How many units in each category is currently held at the warehouse.
+
+**Patterns I have used**
+- Clean architecture
+- Domain driven design(DDD)
+- Value object / Strongly typed
