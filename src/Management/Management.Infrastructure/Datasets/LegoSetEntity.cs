@@ -1,6 +1,6 @@
 namespace SupplyChain.Management.Infrastructure.Datasets;
 
-public sealed class SetEntity
+public sealed class LegoSetEntity
 {
     public string SKU { get; set; }
     public string Name { get; set; }
