@@ -11,6 +11,7 @@ public sealed class CsvComponent : ICsvComponent
 {
     private const string setsPath = "/Users/rasmuskristensen/RiderProjects/SupplyChain/src/Management/Management.Infrastructure/Datasets/sets.csv";
     private const string stocksPath = "/Users/rasmuskristensen/RiderProjects/SupplyChain/src/Management/Management.Infrastructure/Datasets/stock.csv";
+
     public LegoSetModel? GetSetBySku(Sku sku)
     {
         var setEntities = ReadSetsFromCsv();
@@ -68,10 +69,28 @@ public sealed class CsvComponent : ICsvComponent
         return ToModel(filteredStocks, location);
     }
 
+    public WarehouseModel? GetWarehouseStockSummary(WarehouseLocation location)
+    {
+        var legoSetEntities = ReadSetsFromCsv();
+        var stockEntities = ReadStocksFromCsv();
+
+        var houseware = stockEntities.FirstOrDefault(stockEntity => stockEntity.Warehouse == location.Id);
+
+        if (houseware is null)
+        {
+            return null;
+        }
+
+        var stocksTheme = stockEntities.Where(stock =>
+            stock.Warehouse == location.Id &&
+            legoSetEntities.Any(legoSet => legoSet.SKU == stock.SKU));
+
+        return ToModel(stocksTheme, location);
+    }
+
     private IReadOnlyList<WarehouseModel> GroupWarehouses(IEnumerable<StockEntity> warehouses)
     {
-        var warehouseGroups = warehouses.
-            GroupBy(stock => stock.Warehouse)
+        var warehouseGroups = warehouses.GroupBy(stock => stock.Warehouse)
             .Select(warehouseGroup => ToModel(warehouseGroup, new WarehouseLocation(warehouseGroup.Key)))
             .ToList();
 
@@ -89,8 +108,7 @@ public sealed class CsvComponent : ICsvComponent
             pieces: entity.PieceCount,
             uom: new Uom(entity.Uom),
             releaseYear: entity.ReleaseYear.ToString(),
-            state: StateType.From(entity.State)
-        );
+            state: StateType.From(entity.State));
 
         return legoSet;
     }
@@ -113,11 +131,11 @@ public sealed class CsvComponent : ICsvComponent
         var inventory = new Inventory(stocks);
         var warehouse = new WarehouseModel(
             location: warehouseLocation,
-            inventory: inventory
-        );
+            inventory: inventory);
 
         return warehouse;
     }
+
     private static IReadOnlyList<LegoSetEntity> ReadSetsFromCsv()
     {
         using var reader = new StringReader(File.ReadAllText(setsPath));

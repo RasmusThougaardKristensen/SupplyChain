@@ -22,4 +22,9 @@ public class GetWarehouseUseCase : IGetWarehouseUseCase
     {
         return _csvComponent.GetWarehouseInventory(location, maxQuantity, minWeight, maxWeight);
     }
+
+    public WarehouseModel? GetWarehouseStockSummary(WarehouseLocation location)
+    {
+        return _csvComponent.GetWarehouseStockSummary(location);
+    }
 }
