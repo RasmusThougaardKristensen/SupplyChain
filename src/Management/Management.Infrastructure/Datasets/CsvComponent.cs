@@ -44,20 +44,41 @@ public sealed class CsvComponent : ICsvComponent
 
         var stocks = stockEntities.Where(x => x.Warehouse == warehouse.Warehouse);
 
-        return ToModel(stocks, warehouse.Warehouse);
+        return ToModel(stocks, new WarehouseLocation(warehouse.Warehouse));
+    }
+
+    public WarehouseModel? GetWarehouseInventory(WarehouseLocation location, int maxQuantity, int minweight, int maxWeight)
+    {
+        var legoSetEntities = ReadSetsFromCsv();
+        var stockEntities = ReadStocksFromCsv();
+
+        var houseware = stockEntities.FirstOrDefault(stockEntity => stockEntity.Warehouse == location.Id);
+
+        if (houseware is null)
+        {
+            return null;
+        }
+
+        var filteredStocks = stockEntities
+            .Where(stock => stock.Warehouse == location.Id && stock.Quantity <= maxQuantity)
+            .Where(stock => legoSetEntities.Any(legoSet =>
+                legoSet.SKU == stock.SKU &&
+                legoSet.Weight >= minweight && legoSet.Weight <= maxWeight));
+
+        return ToModel(filteredStocks, location);
     }
 
     private IReadOnlyList<WarehouseModel> GroupWarehouses(IEnumerable<StockEntity> warehouses)
     {
         var warehouseGroups = warehouses.
             GroupBy(stock => stock.Warehouse)
-            .Select(warehouseGroup => ToModel(warehouseGroup, warehouseGroup.Key))
+            .Select(warehouseGroup => ToModel(warehouseGroup, new WarehouseLocation(warehouseGroup.Key)))
             .ToList();
 
         return warehouseGroups;
     }
 
-    private LegoSetModel ToModel(SetEntity entity)
+    private LegoSetModel ToModel(LegoSetEntity entity)
     {
         var legoSet = new LegoSetModel(
             sku: new Sku(entity.SKU),
@@ -74,7 +95,7 @@ public sealed class CsvComponent : ICsvComponent
         return legoSet;
     }
 
-    private WarehouseModel ToModel(IEnumerable<StockEntity> stockEntities, string warehouseLocation)
+    private WarehouseModel ToModel(IEnumerable<StockEntity> stockEntities, WarehouseLocation warehouseLocation)
     {
         var stocks = new List<Stock>();
         foreach (var stockEntity in stockEntities)
@@ -91,18 +112,18 @@ public sealed class CsvComponent : ICsvComponent
 
         var inventory = new Inventory(stocks);
         var warehouse = new WarehouseModel(
-            location: new WarehouseLocation(warehouseLocation),
+            location: warehouseLocation,
             inventory: inventory
         );
 
         return warehouse;
     }
-    private static IReadOnlyList<SetEntity> ReadSetsFromCsv()
+    private static IReadOnlyList<LegoSetEntity> ReadSetsFromCsv()
     {
         using var reader = new StringReader(File.ReadAllText(setsPath));
         using var csv = new CsvReader(reader, CultureInfo.InvariantCulture);
         csv.Context.RegisterClassMap<LegoSetCsvMap>();
-        var setEntities = csv.GetRecords<SetEntity>();
+        var setEntities = csv.GetRecords<LegoSetEntity>();
 
         return setEntities.ToList();
     }
@@ -115,87 +136,6 @@ public sealed class CsvComponent : ICsvComponent
         var stockEntities = csv.GetRecords<StockEntity>();
 
         return stockEntities.ToList();
-    }
-
-    public IReadOnlyList<LegoSetModel> GetAllSets(string path)
-    {
-        var legoSets = new List<LegoSetModel>();
-
-        using var reader = new StringReader(File.ReadAllText(path));
-        using var csv = new CsvReader(reader, CultureInfo.InvariantCulture);
-
-        csv.Context.RegisterClassMap<LegoSetCsvMap>();
-        var records = csv.GetRecords<SetEntity>();
-
-        foreach (var record in records)
-        {
-            try
-            {
-                legoSets.Add(ToModel(record));
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"Error processing LegoSets record SKU {record.SKU}: {ex.Message}");
-            }
-        }
-
-        return legoSets;
-    }
-
-    public IReadOnlyList<WarehouseModel> ReadWarehouses(string stockFilePath)
-    {
-        var stockRecords = ReadStockRecords(stockFilePath);
-        var warehouses = new List<WarehouseModel>();
-
-        // Group stocks by warehouse
-        var wareHouses = stockRecords.GroupBy(s => s.Warehouse);
-
-        foreach (var warehouseGroup in wareHouses)
-        {
-            var stocks = new List<Stock>();
-
-            foreach (var stockRecord in warehouseGroup)
-            {
-                try
-                {
-                    var stock = new Stock(
-                        new Sku(stockRecord.SKU),
-                        stockRecord.Quantity,
-                        ParseDeliveryDate(stockRecord.DeliveryDate),
-                        new Uom(stockRecord.Uom),
-                        new StockPlacement(stockRecord.Placement, stockRecord.Shelf));
-
-                    stocks.Add(stock);
-                }
-                catch (Exception ex)
-                {
-                    Console.WriteLine($"Error processing Stock record SKU {stockRecord.SKU} in warehouse {stockRecord.Warehouse}: {ex.Message}");
-                }
-            }
-
-            var inventory = new Inventory(stocks);
-            var warehouse = new WarehouseModel(
-                location: new WarehouseLocation(warehouseGroup.Key), // Using warehouse name as location
-                inventory: inventory
-            );
-
-            warehouses.Add(warehouse);
-        }
-
-        return warehouses;
-    }
-
-    private List<StockEntity> ReadStockRecords(string filePath)
-    {
-        var stockRecords = new List<StockEntity>();
-
-        using var reader = new StringReader(File.ReadAllText(filePath));
-        using var csv = new CsvReader(reader, CultureInfo.InvariantCulture);
-
-        csv.Context.RegisterClassMap<StockCsvMap>();
-        stockRecords.AddRange(csv.GetRecords<StockEntity>());
-
-        return stockRecords;
     }
 
     private DateTime ParseDeliveryDate(string dateString)
