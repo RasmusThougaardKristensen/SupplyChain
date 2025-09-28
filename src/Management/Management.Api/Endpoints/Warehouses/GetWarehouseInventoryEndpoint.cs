@@ -1,7 +1,7 @@
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using SupplyChain.Management.Api.Endpoints.LegoSets;
-using SupplyChain.Management.Application.UseCases;
+using SupplyChain.Management.Application.UseCases.Warehouses;
 using SupplyChain.Management.Domain.Warehouses;
 using Swashbuckle.AspNetCore.Annotations;
 
