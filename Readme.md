@@ -43,6 +43,7 @@ The API must be able to respond to 3 or more of the following queries and update
 
 **TODOs**
 - Move logic out of csv component into application layer. To follow clean architecture
+- Modify response of endpoint to be more clear and useful
 - Figure out what master data is - Task: Provide master data for a LEGO set given its unique SKU id.
 - Make it optional to query warehouse inventory - Task: make it possible to query a warehouse for SKUs that have at most X units in stock.
 - Figure out how to get rid of bigger sets first - Task: make it possible to filter by weight as well to get rid of the bigger sets first. 
