@@ -16,7 +16,7 @@ public sealed record WarehouseStockRequest : IValidatableObject
         var validValues = new HashSet<string>(StringComparer.InvariantCultureIgnoreCase) {"Active", "Retired", "Unreleased"};
         if (!validValues.Contains(State))
         {
-            yield return new ValidationResult($"Invalid permission: '{State}'. Only 'Active', 'Retired' and 'Unreleased' are valid");
+            yield return new ValidationResult($"Invalid State: '{State}'. Only 'Active', 'Retired' and 'Unreleased' are valid");
         }
     }
 }

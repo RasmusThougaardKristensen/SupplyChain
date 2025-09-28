@@ -15,7 +15,7 @@ public record RegisterShipmentStockRequest : IValidatableObject
     {
         if (Quantity <= 0)
         {
-            yield return new ValidationResult($"Quantity must be greater than 0");
+            yield return new ValidationResult($"Quantity must be greater than or equal to 0");
         }
     }
 }
