@@ -1,4 +1,4 @@
-namespace SupplyChain.Management.Infrastructure.Datasets;
+namespace SupplyChain.Management.Infrastructure.Repositories.Warehouses;
 
 public sealed class StockEntity
 {

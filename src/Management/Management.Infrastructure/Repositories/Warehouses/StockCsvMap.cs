@@ -1,6 +1,7 @@
 using CsvHelper.Configuration;
+using SupplyChain.Management.Infrastructure.Datasets;
 
-namespace SupplyChain.Management.Infrastructure.Datasets;
+namespace SupplyChain.Management.Infrastructure.Repositories.Warehouses;
 
 public sealed class StockCsvMap : ClassMap<StockEntity>
 {
