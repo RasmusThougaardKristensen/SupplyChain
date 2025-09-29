@@ -4,15 +4,17 @@ using SupplyChain.Management.Application.Components;
 using SupplyChain.Management.Domain.LegoSets;
 using SupplyChain.Management.Domain.Warehouses;
 using SupplyChain.Management.Domain.Warehouses.Stocks;
+using SupplyChain.Management.Infrastructure.Repositories.LegoSets;
+using SupplyChain.Management.Infrastructure.Repositories.Warehouses;
 
 namespace SupplyChain.Management.Infrastructure.Datasets;
 
 public sealed class CsvComponent : ICsvComponent
 {
-    private const string setsPath = "/Users/rasmuskristensen/RiderProjects/SupplyChain/src/Management/Management.Infrastructure/Datasets/sets.csv";
-    private const string stocksPath = "/Users/rasmuskristensen/RiderProjects/SupplyChain/src/Management/Management.Infrastructure/Datasets/stock.csv";
+    private const string setsPath = "/Users/rasmuskristensen/RiderProjects/SupplyChain/src/Management/Management.Infrastructure/Repositories/Legosets/sets.csv";
+    private const string stocksPath = "/Users/rasmuskristensen/RiderProjects/SupplyChain/src/Management/Management.Infrastructure/Repositories/Warehouses/stock.csv";
 
-    public LegoSetModel? GetSetBySku(Sku sku)
+public LegoSetModel? GetSetBySku(Sku sku)
     {
         var setEntities = ReadSetsFromCsv();
 

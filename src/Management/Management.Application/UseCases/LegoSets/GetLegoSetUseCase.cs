@@ -1,19 +1,20 @@
 using SupplyChain.Management.Application.Components;
+using SupplyChain.Management.Application.Repositories;
 using SupplyChain.Management.Domain.LegoSets;
 
 namespace SupplyChain.Management.Application.UseCases.LegoSets;
 
 public class GetLegoSetUseCase : IGetLegoSetUseCase
 {
-    private readonly ICsvComponent _csvComponent;
+    private readonly ILegoSetRepository _legoSetRepository;
 
-    public GetLegoSetUseCase(ICsvComponent csvComponent)
+    public GetLegoSetUseCase(ILegoSetRepository legoSetRepository)
     {
-        _csvComponent = csvComponent;
+        _legoSetRepository = legoSetRepository;
     }
 
     public LegoSetModel? GetSetBySku(Sku sku)
     {
-        return _csvComponent.GetSetBySku(sku);
+        return _legoSetRepository.GetLegoSetBySku(sku);
     }
 }
