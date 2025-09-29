@@ -1,4 +1,4 @@
-namespace SupplyChain.Management.Infrastructure.Datasets;
+namespace SupplyChain.Management.Infrastructure.Repositories.LegoSets;
 
 public sealed class LegoSetEntity
 {
