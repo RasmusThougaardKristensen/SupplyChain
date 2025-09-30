@@ -14,18 +14,6 @@ public sealed class CsvComponent : ICsvComponent
     private const string setsPath = "/Users/rasmuskristensen/RiderProjects/SupplyChain/src/Management/Management.Infrastructure/Repositories/Legosets/sets.csv";
     private const string stocksPath = "/Users/rasmuskristensen/RiderProjects/SupplyChain/src/Management/Management.Infrastructure/Repositories/Warehouses/stock.csv";
 
-    public IReadOnlyList<WarehouseModel> GetWarehouses(Sku sku, StateType stateType)
-    {
-        var legoSetEntities = ReadSetsFromCsv();
-        var stockEntities = ReadStocksFromCsv();
-
-        var availableSets = legoSetEntities.Where(set => set.State == stateType.ToString());
-
-        var warehouses = stockEntities.Where(stockEntity => availableSets.Any(availableSetEntity => availableSetEntity.SKU == stockEntity.SKU));
-
-        return GroupWarehouses(warehouses);
-    }
-
     public WarehouseModel? GetWarehouseByLocation(WarehouseLocation location)
     {
         var stockEntities = ReadStocksFromCsv();
@@ -79,31 +67,6 @@ public sealed class CsvComponent : ICsvComponent
             legoSetEntities.Any(legoSet => legoSet.SKU == stock.SKU));
 
         return ToModel(stocksTheme, location);
-    }
-
-    private IReadOnlyList<WarehouseModel> GroupWarehouses(IEnumerable<StockEntity> warehouses)
-    {
-        var warehouseGroups = warehouses.GroupBy(stock => stock.Warehouse)
-            .Select(warehouseGroup => ToModel(warehouseGroup, new WarehouseLocation(warehouseGroup.Key)))
-            .ToList();
-
-        return warehouseGroups;
-    }
-
-    private LegoSetModel ToModel(LegoSetEntity entity)
-    {
-        var legoSet = new LegoSetModel(
-            sku: new Sku(entity.SKU),
-            name: entity.Name,
-            theme: entity.Theme,
-            weight: entity.Weight,
-            rating: entity.Rating,
-            pieces: entity.PieceCount,
-            uom: new Uom(entity.Uom),
-            releaseYear: entity.ReleaseYear.ToString(),
-            state: StateType.From(entity.State));
-
-        return legoSet;
     }
 
     private WarehouseModel ToModel(IEnumerable<StockEntity> stockEntities, WarehouseLocation warehouseLocation)

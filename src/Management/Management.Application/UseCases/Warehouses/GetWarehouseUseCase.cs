@@ -18,11 +18,6 @@ public class GetWarehouseUseCase : IGetWarehouseUseCase
         _legoSetRepository = legoSetRepository;
     }
 
-    public IReadOnlyList<WarehouseModel> GetWarehouses(Sku sku, StateType stateType)
-    {
-        return _csvComponent.GetWarehouses(sku, stateType);
-    }
-
     public IReadOnlyList<WarehouseModel> GetWarehousesWithAvailableStockForSkus(IReadOnlyList<Sku> requestedSkus)
     {
         var warehouses = _warehouseRepository.GetWarehousesWithSkus(requestedSkus);
