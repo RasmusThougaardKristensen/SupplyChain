@@ -27,7 +27,7 @@ public class GetLegoSetBySkuEndpoint : ControllerBase
 
     public ActionResult<LegoSetResponse> GetLegoSetBySku([FromRoute] string sku)
     {
-        var legoSet = _getLegoSetUseCase.GetSetBySku(new Sku(sku));
+        var legoSet = _getLegoSetUseCase.GetLegoSetBySku(new Sku(sku));
 
         if (legoSet is null)
         {
