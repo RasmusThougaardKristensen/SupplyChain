@@ -25,6 +25,8 @@ public sealed record Stock
         Placement = placement;
     }
 
+    public bool IsAvailable => Quantity >= 0;
+
     public void IncreaseQuantity(int increaseQuantity) => Quantity += increaseQuantity;
     public void DecreaseQuantity(int decreaseQuantity)
     {
