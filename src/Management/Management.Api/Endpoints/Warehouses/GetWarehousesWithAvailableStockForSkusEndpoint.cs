@@ -8,11 +8,11 @@ using Swashbuckle.AspNetCore.Annotations;
 namespace SupplyChain.Management.Api.Endpoints.Warehouses;
 
 [ApiController]
-public class GetWarehousesStockAvailableEndpoint : ControllerBase
+public class GetWarehousesWithAvailableStockForSkusEndpoint : ControllerBase
 {
     private readonly IGetWarehouseUseCase _getWarehouseUseCase;
 
-    public GetWarehousesStockAvailableEndpoint(IGetWarehouseUseCase getWarehouseUseCase)
+    public GetWarehousesWithAvailableStockForSkusEndpoint(IGetWarehouseUseCase getWarehouseUseCase)
     {
         _getWarehouseUseCase = getWarehouseUseCase;
     }
@@ -22,15 +22,14 @@ public class GetWarehousesStockAvailableEndpoint : ControllerBase
     [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status404NotFound)]
     [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status500InternalServerError)]
     [SwaggerOperation(
-        Summary =  "Get a list of warehouses with available stock for given SKUs. Available are based on the state of the lego set",
-        OperationId = nameof(GetWarehousesStockAvailable),
+        Summary =  "Get a list of warehouses with available stock for given SKUs.",
+        OperationId = nameof(GetWarehousesWithAvailableStocks),
         Tags = [Constants.ApiTags.Warehouse])]
 
-    public ActionResult<LegoSetResponse> GetWarehousesStockAvailable([FromQuery] WarehouseStockRequest request)
+    public ActionResult<IEnumerable<WarehouseResponse>> GetWarehousesWithAvailableStocks([FromQuery] WarehouseStockRequest request)
     {
-        var warehouses = _getWarehouseUseCase.GetWarehouses(new Sku(request.Sku), StateType.From(request.State));
-
-        var response = warehouses.Select(warehouse => new WarehouseResponse(warehouse));
-        return Ok(response);
+        var requestedSkus = request.Skus.Select(sku => new Sku(sku)).ToList();
+        var warehouses = _getWarehouseUseCase.GetWarehousesWithAvailableStockForSkus(requestedSkus);
+        return Ok(warehouses.Select(warehouse => new WarehouseResponse(warehouse)));
     }
 }
