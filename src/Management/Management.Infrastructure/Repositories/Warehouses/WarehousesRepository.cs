@@ -11,7 +11,6 @@ public class WarehousesRepository : IWarehouseRepository
 {
     private const string stocksPath = "/Users/rasmuskristensen/RiderProjects/SupplyChain/src/Management/Management.Infrastructure/Repositories/Warehouses/stock.csv";
 
-
     public IReadOnlyList<WarehouseModel> GetWarehousesWithSkus(IReadOnlyList<Sku> requestedSkus)
     {
         var stockEntities = ReadStocksFromCsv();
@@ -20,7 +19,6 @@ public class WarehousesRepository : IWarehouseRepository
             .Where(stock => requestedSkus.Contains(new Sku(stock.SKU)))
             .GroupBy(stock => stock.Warehouse)
             .ToList();
-
 
         var warehouses = availableStocks
             .Select(stockInWarehouse =>
