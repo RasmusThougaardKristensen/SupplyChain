@@ -14,21 +14,6 @@ public sealed class CsvComponent : ICsvComponent
     private const string setsPath = "/Users/rasmuskristensen/RiderProjects/SupplyChain/src/Management/Management.Infrastructure/Repositories/Legosets/sets.csv";
     private const string stocksPath = "/Users/rasmuskristensen/RiderProjects/SupplyChain/src/Management/Management.Infrastructure/Repositories/Warehouses/stock.csv";
 
-    public WarehouseModel? GetWarehouseByLocation(WarehouseLocation location)
-    {
-        var stockEntities = ReadStocksFromCsv();
-        var warehouse = stockEntities.FirstOrDefault(stock => stock.Warehouse == location.Id);
-
-        if (warehouse is null)
-        {
-            return null;
-        }
-
-        var stocks = stockEntities.Where(x => x.Warehouse == warehouse.Warehouse);
-
-        return ToModel(stocks, new WarehouseLocation(warehouse.Warehouse));
-    }
-
     public WarehouseModel? GetWarehouseInventory(WarehouseLocation location, int maxQuantity, int minweight, int maxWeight)
     {
         var legoSetEntities = ReadSetsFromCsv();

@@ -28,6 +28,21 @@ public class WarehousesRepository : IWarehouseRepository
         return warehouses;
     }
 
+    public WarehouseModel? GetWarehouseByLocation(WarehouseLocation location)
+    {
+        var stockEntities = ReadStocksFromCsv();
+        var warehouse = stockEntities.FirstOrDefault(stock => stock.Warehouse == location.Id);
+
+        if (warehouse is null)
+        {
+            return null;
+        }
+
+        var stocks = stockEntities.Where(x => x.Warehouse == warehouse.Warehouse);
+
+        return ToModel(stocks, new WarehouseLocation(warehouse.Warehouse));
+    }
+
     private WarehouseModel ToModel(IEnumerable<StockEntity> stockEntities, WarehouseLocation warehouseLocation)
     {
         var stocks = new List<Stock>();
