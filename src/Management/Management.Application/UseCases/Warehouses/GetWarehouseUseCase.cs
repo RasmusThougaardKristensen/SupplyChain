@@ -29,10 +29,6 @@ public class GetWarehouseUseCase : IGetWarehouseUseCase
         return warehousesWithAvailableStock;
     }
 
-    public WarehouseModel? GetWarehouseInventory(WarehouseLocation location, int maxQuantity, int minWeight, int maxWeight)
-    {
-        return _csvComponent.GetWarehouseInventory(location, maxQuantity, minWeight, maxWeight);
-    }
 
     public WarehouseModel? GetWarehouseStockSummary(WarehouseLocation location)
     {
