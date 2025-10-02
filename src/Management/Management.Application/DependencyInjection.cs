@@ -1,4 +1,5 @@
 using Microsoft.Extensions.DependencyInjection;
+using SupplyChain.Management.Application.Services;
 using SupplyChain.Management.Application.UseCases.ClearanceSale;
 using SupplyChain.Management.Application.UseCases.LegoSets;
 using SupplyChain.Management.Application.UseCases.Orders;
@@ -22,8 +23,10 @@ public static class DependencyInjection
         services.AddScoped<IGetOrderUseCase, GetOrderUseCase>();
         services.AddScoped<IRegisterShipmentToWarehouseUseCase, RegisterShipmentToWarehouseUseCase>();
         services.AddScoped<IRegisterShipmentToCustomerUseCase, RegisterShipmentToCustomerUseCase>();
-        services.AddScoped<IGetWarehouseClearanceUseCase, GetWarehouseGetWarehouseClearanceUseCase>();
+        services.AddScoped<IGetWarehouseClearanceUseCase, GetWarehouseClearanceUseCase>();
         services.AddScoped<IWarehouseClearanceResultMapper, WarehouseClearanceResultMapper>();
+        services.AddScoped<IGetWarehouseSummaryUseCase, GetWarehouseSummaryUseCase>();
+        services.AddScoped<IWarehouseSummaryService, WarehouseSummaryService>();
 
         return services;
     }
