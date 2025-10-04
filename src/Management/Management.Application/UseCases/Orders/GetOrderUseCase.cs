@@ -1,4 +1,3 @@
-using SupplyChain.Management.Application.Components;
 using SupplyChain.Management.Domain.LegoSets;
 using SupplyChain.Management.Domain.Orders;
 
@@ -6,12 +5,7 @@ namespace SupplyChain.Management.Application.UseCases.Orders;
 
 public class GetOrderUseCase : IGetOrderUseCase
 {
-    private readonly ICsvComponent _csvComponent;
-
-    public GetOrderUseCase(ICsvComponent csvComponent)
-    {
-        _csvComponent = csvComponent;
-    }
+    public GetOrderUseCase() { }
 
     public OrderModel GetOrderById(OrderId orderId)
     {

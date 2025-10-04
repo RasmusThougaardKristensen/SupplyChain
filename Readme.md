@@ -42,7 +42,7 @@ The API must be able to respond to 3 or more of the following queries and update
   - Allow coworker to continue or look at the code remote
 
 **TODOs**
-- Move logic out of csv component into application layer. To follow clean architecture
+- Move logic out of csv componen  t into application layer. To follow clean architecture
 - Modify response of endpoint to be more clear and useful
 - Figure out what master data is - Task: Provide master data for a LEGO set given its unique SKU id.
 - Make it optional to query warehouse inventory - Task: make it possible to query a warehouse for SKUs that have at most X units in stock.

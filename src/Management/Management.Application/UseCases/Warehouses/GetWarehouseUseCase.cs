@@ -1,4 +1,3 @@
-using SupplyChain.Management.Application.Components;
 using SupplyChain.Management.Application.Repositories;
 using SupplyChain.Management.Domain.LegoSets;
 using SupplyChain.Management.Domain.Warehouses;
@@ -7,15 +6,11 @@ namespace SupplyChain.Management.Application.UseCases.Warehouses;
 
 public class GetWarehouseUseCase : IGetWarehouseUseCase
 {
-    private readonly ICsvComponent _csvComponent;
     private readonly IWarehouseRepository _warehouseRepository;
-    private readonly ILegoSetRepository _legoSetRepository;
 
-    public GetWarehouseUseCase(ICsvComponent csvComponent, IWarehouseRepository warehouseRepository, ILegoSetRepository legoSetRepository)
+    public GetWarehouseUseCase(IWarehouseRepository warehouseRepository)
     {
-        _csvComponent = csvComponent;
         _warehouseRepository = warehouseRepository;
-        _legoSetRepository = legoSetRepository;
     }
 
     public IReadOnlyList<WarehouseModel> GetWarehousesWithAvailableStockForSkus(IReadOnlyList<Sku> requestedSkus)
@@ -27,11 +22,5 @@ public class GetWarehouseUseCase : IGetWarehouseUseCase
             .ToList();
 
         return warehousesWithAvailableStock;
-    }
-
-
-    public WarehouseModel? GetWarehouseStockSummary(WarehouseLocation location)
-    {
-        return _csvComponent.GetWarehouseStockSummary(location);
     }
 }
