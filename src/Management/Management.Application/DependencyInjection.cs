@@ -1,10 +1,11 @@
 using Microsoft.Extensions.DependencyInjection;
-using SupplyChain.Management.Application.Services;
+using SupplyChain.Management.Application.Services.Warehouses;
 using SupplyChain.Management.Application.UseCases.ClearanceSale;
 using SupplyChain.Management.Application.UseCases.LegoSets;
 using SupplyChain.Management.Application.UseCases.Orders;
 using SupplyChain.Management.Application.UseCases.Shipments;
 using SupplyChain.Management.Application.UseCases.Warehouses;
+using SupplyChain.Management.Application.UseCases.Warehouses.GetSummary;
 using SupplyChain.Management.Domain.ClearanceSale;
 
 namespace SupplyChain.Management.Application;

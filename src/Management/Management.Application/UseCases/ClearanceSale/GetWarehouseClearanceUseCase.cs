@@ -4,13 +4,13 @@ using SupplyChain.Management.Domain.Warehouses;
 
 namespace SupplyChain.Management.Application.UseCases.ClearanceSale;
 
-public class GetWarehouseGetWarehouseClearanceUseCase : IGetWarehouseClearanceUseCase
+public class GetWarehouseClearanceUseCase : IGetWarehouseClearanceUseCase
 {
     private readonly IWarehouseRepository _warehouseRepository;
     private readonly ILegoSetRepository _legoSetRepository;
     private readonly IWarehouseClearanceResultMapper _warehouseClearanceResultMapper;
 
-    public GetWarehouseGetWarehouseClearanceUseCase(IWarehouseRepository warehouseRepository, ILegoSetRepository legoSetRepository, IWarehouseClearanceResultMapper warehouseClearanceResultMapper)
+    public GetWarehouseClearanceUseCase(IWarehouseRepository warehouseRepository, ILegoSetRepository legoSetRepository, IWarehouseClearanceResultMapper warehouseClearanceResultMapper)
     {
         _warehouseRepository = warehouseRepository;
         _legoSetRepository = legoSetRepository;
