@@ -1,11 +1,10 @@
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using SupplyChain.Management.Api.Endpoints.LegoSets;
 using SupplyChain.Management.Application.UseCases.Warehouses;
 using SupplyChain.Management.Domain.LegoSets;
 using Swashbuckle.AspNetCore.Annotations;
 
-namespace SupplyChain.Management.Api.Endpoints.Warehouses;
+namespace SupplyChain.Management.Api.Endpoints.Warehouses.GetAvailableStock;
 
 [ApiController]
 public class GetWarehousesWithAvailableStockForSkusEndpoint : ControllerBase

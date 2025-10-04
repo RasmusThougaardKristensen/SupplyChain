@@ -1,7 +1,6 @@
-using System.ComponentModel.DataAnnotations;
 using Swashbuckle.AspNetCore.Annotations;
 
-namespace SupplyChain.Management.Api.Endpoints.Warehouses;
+namespace SupplyChain.Management.Api.Endpoints.Warehouses.GetAvailableStock;
 
 public sealed record WarehouseStockRequest
 {

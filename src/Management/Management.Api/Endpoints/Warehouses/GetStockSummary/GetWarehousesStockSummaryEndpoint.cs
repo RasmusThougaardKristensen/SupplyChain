@@ -1,23 +1,23 @@
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using SupplyChain.Management.Application.UseCases;
-using SupplyChain.Management.Application.UseCases.Warehouses;
+using SupplyChain.Management.Api.Endpoints.Warehouses.GetAvailableStock;
+using SupplyChain.Management.Application.UseCases.Warehouses.GetSummary;
 using SupplyChain.Management.Domain.Warehouses;
 using Swashbuckle.AspNetCore.Annotations;
 
-namespace SupplyChain.Management.Api.Endpoints.Warehouses;
+namespace SupplyChain.Management.Api.Endpoints.Warehouses.GetStockSummary;
 
 [ApiController]
 public class GetWarehousesStockSummaryEndpoint : ControllerBase
 {
-    private readonly IGetWarehouseUseCase _getWarehouseUseCase;
+    private readonly IGetWarehouseSummaryUseCase _getWarehouseSummaryUseCase;
 
-    public GetWarehousesStockSummaryEndpoint(IGetWarehouseUseCase getWarehouseUseCase)
+    public GetWarehousesStockSummaryEndpoint(IGetWarehouseSummaryUseCase getWarehouseSummaryUseCase)
     {
-        _getWarehouseUseCase = getWarehouseUseCase;
+        _getWarehouseSummaryUseCase = getWarehouseSummaryUseCase;
     }
 
-    [HttpGet("warehouses/{location}/stock-summary")]
+    [HttpGet("warehouses/{location}/summary")]
     [ProducesResponseType(typeof(WarehouseResponse), StatusCodes.Status200OK)]
     [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status404NotFound)]
     [ProducesResponseType(typeof(WarehouseResponse), StatusCodes.Status500InternalServerError)]
@@ -28,13 +28,13 @@ public class GetWarehousesStockSummaryEndpoint : ControllerBase
 
     public ActionResult GetWarehouseStockSummary([FromRoute] string location)
     {
-        var warehouse = _getWarehouseUseCase.GetWarehouseStockSummary(new WarehouseLocation(location));
+        var warehouse = _getWarehouseSummaryUseCase.GetWarehouseStockSummary(new WarehouseLocation(location));
 
         if (warehouse is null)
         {
             return NotFound();
         }
 
-        return Ok(new WarehouseResponse(warehouse));
+        return Ok(new WarehouseSummaryResponse(warehouse));
     }
 }
