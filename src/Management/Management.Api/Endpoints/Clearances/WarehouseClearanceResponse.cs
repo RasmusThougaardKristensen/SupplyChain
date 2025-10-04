@@ -1,4 +1,4 @@
-using SupplyChain.Management.Domain.ClearanceSale;
+using SupplyChain.Management.Application.UseCases.Warehouses.GetWarehouseClearances;
 
 namespace SupplyChain.Management.Api.Endpoints.Clearances;
 
@@ -11,13 +11,13 @@ public sealed record WarehouseClearanceResponse
     public int Placement { get; }
     public int Shelf { get; }
 
-    public WarehouseClearanceResponse(WarehouseClearanceLegoSet warehouseClearanceLegoSet)
+    public WarehouseClearanceResponse(WarehouseClearanceLegoSetDto warehouseClearanceLegoSetDto)
     {
-        Sku = warehouseClearanceLegoSet.Sku.Id;
-        Name = warehouseClearanceLegoSet.Name;
-        Quantity = warehouseClearanceLegoSet.Quantity;
-        Weight = warehouseClearanceLegoSet.Weight;
-        Placement = warehouseClearanceLegoSet.Placement.Placement;
-        Shelf = warehouseClearanceLegoSet.Placement.Shelf;
+        Sku = warehouseClearanceLegoSetDto.Sku.Id;
+        Name = warehouseClearanceLegoSetDto.Name;
+        Quantity = warehouseClearanceLegoSetDto.Quantity;
+        Weight = warehouseClearanceLegoSetDto.Weight;
+        Placement = warehouseClearanceLegoSetDto.Placement.Placement;
+        Shelf = warehouseClearanceLegoSetDto.Placement.Shelf;
     }
 }

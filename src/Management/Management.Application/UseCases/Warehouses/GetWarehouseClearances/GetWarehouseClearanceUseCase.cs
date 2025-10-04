@@ -1,28 +1,27 @@
 using SupplyChain.Management.Application.Repositories;
-using SupplyChain.Management.Domain.ClearanceSale;
 using SupplyChain.Management.Domain.Warehouses;
 
-namespace SupplyChain.Management.Application.UseCases.ClearanceSale;
+namespace SupplyChain.Management.Application.UseCases.Warehouses.GetWarehouseClearances;
 
 public class GetWarehouseClearanceUseCase : IGetWarehouseClearanceUseCase
 {
     private readonly IWarehouseRepository _warehouseRepository;
     private readonly ILegoSetRepository _legoSetRepository;
-    private readonly IWarehouseClearanceResultMapper _warehouseClearanceResultMapper;
+    private readonly IWarehouseClearanceDtoMapper _warehouseClearanceDtoMapper;
 
-    public GetWarehouseClearanceUseCase(IWarehouseRepository warehouseRepository, ILegoSetRepository legoSetRepository, IWarehouseClearanceResultMapper warehouseClearanceResultMapper)
+    public GetWarehouseClearanceUseCase(IWarehouseRepository warehouseRepository, ILegoSetRepository legoSetRepository, IWarehouseClearanceDtoMapper warehouseClearanceDtoMapper)
     {
         _warehouseRepository = warehouseRepository;
         _legoSetRepository = legoSetRepository;
-        _warehouseClearanceResultMapper = warehouseClearanceResultMapper;
+        _warehouseClearanceDtoMapper = warehouseClearanceDtoMapper;
     }
 
-    public IReadOnlyList<WarehouseClearanceLegoSet> GetWarehouseClearance(WarehouseLocation location, int maxQuantity, int minWeight, int maxWeight)
+    public IReadOnlyList<WarehouseClearanceLegoSetDto> GetWarehouseClearance(WarehouseLocation location, int maxQuantity, int minWeight, int maxWeight)
     {
         var warehouse = _warehouseRepository.GetWarehouseByLocation(location);
         if (warehouse is null)
         {
-            return new List<WarehouseClearanceLegoSet>();
+            return new List<WarehouseClearanceLegoSetDto>();
         }
 
         var lowStockItems = warehouse.Inventory.Stocks
@@ -35,7 +34,7 @@ public class GetWarehouseClearanceUseCase : IGetWarehouseClearanceUseCase
             minWeight,
             maxWeight);
 
-        return _warehouseClearanceResultMapper.ToClearanceItems(lowStockItems, legoSets)
+        return _warehouseClearanceDtoMapper.ToClearanceItems(lowStockItems, legoSets)
             .OrderByDescendingWeight();
     }
 }
