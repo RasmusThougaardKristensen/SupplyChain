@@ -12,11 +12,34 @@ public sealed class LegoSetRepository : ILegoSetRepository
 
     public LegoSetModel? GetLegoSetBySku(Sku sku)
     {
-        var setEntities = ReadLegoSetsFromCsv();
+        var legoSetEntities = ReadLegoSetsFromCsv();
 
-        var entity = setEntities.FirstOrDefault(setEntity => setEntity.SKU == sku.Id);
+        var entity = legoSetEntities.FirstOrDefault(setEntity => setEntity.SKU == sku.Id);
 
         return entity is null ? null : ToModel(entity);
+    }
+
+    public IReadOnlyList<LegoSetModel> GetLegoSetBySkus(IReadOnlyList<Sku> skus)
+    {
+        var legoSetEntities = ReadLegoSetsFromCsv();
+
+        return legoSetEntities.Where(legoSet => skus.Contains(new Sku(legoSet.SKU)))
+            .Select(ToModel)
+            .ToList();
+    }
+
+    public IReadOnlyList<LegoSetModel> GetLegoSetsByWeight(IReadOnlyList<Sku> requestedSkus, int minWeight, int maxWeight)
+    {
+        var legoSetEntities = ReadLegoSetsFromCsv();
+
+        var filteredLegoSets = legoSetEntities
+            .Where(legoSet => requestedSkus.Contains(new Sku(legoSet.SKU)))
+            .Where(legoSet => legoSet.Weight >= minWeight
+                              && legoSet.Weight <= maxWeight)
+            .Select(ToModel)
+            .ToList();
+
+        return filteredLegoSets;
     }
 
     private LegoSetModel ToModel(LegoSetEntity entity)
@@ -29,7 +52,7 @@ public sealed class LegoSetRepository : ILegoSetRepository
             rating: entity.Rating,
             pieces: entity.PieceCount,
             uom: new Uom(entity.Uom),
-            releaseYear: entity.ReleaseYear.ToString(),
+            releaseYear: entity.ReleaseYear,
             state: StateType.From(entity.State));
 
         return legoSet;

@@ -8,5 +8,6 @@ public static class Constants
         public const string LegoSet = "LegoSet";
         public const string Order = "Order";
         public const string Shipment = "Shipment";
+        public const string Clearance = "Clearance";
     }
 }

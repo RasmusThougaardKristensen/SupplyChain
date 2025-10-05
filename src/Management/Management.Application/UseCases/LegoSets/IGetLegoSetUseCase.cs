@@ -4,5 +4,5 @@ namespace SupplyChain.Management.Application.UseCases.LegoSets;
 
 public interface IGetLegoSetUseCase
 {
-    LegoSetModel? GetSetBySku(Sku sku);
+    LegoSetModel? GetLegoSetBySku(Sku sku);
 }

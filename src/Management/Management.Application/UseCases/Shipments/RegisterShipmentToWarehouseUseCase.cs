@@ -1,4 +1,4 @@
-using SupplyChain.Management.Application.Components;
+using SupplyChain.Management.Application.Repositories;
 using SupplyChain.Management.Domain.LegoSets;
 using SupplyChain.Management.Domain.Warehouses;
 using SupplyChain.Management.Domain.Warehouses.Stocks;
@@ -7,16 +7,16 @@ namespace SupplyChain.Management.Application.UseCases.Shipments;
 
 public class RegisterShipmentToWarehouseUseCase : IRegisterShipmentToWarehouseUseCase
 {
-    private readonly ICsvComponent _csvComponent;
+    private readonly IWarehouseRepository _warehouseRepository;
 
-    public RegisterShipmentToWarehouseUseCase(ICsvComponent csvComponent)
+    public RegisterShipmentToWarehouseUseCase(IWarehouseRepository warehouseRepository)
     {
-        _csvComponent = csvComponent;
+        _warehouseRepository = warehouseRepository;
     }
 
     public WarehouseModel? RegisterReceiptShipmentToWarehouse(WarehouseLocation targetWarehouseLocation, Sku sku, int quantity)
     {
-        var targetWarehouse = _csvComponent.GetWarehouseByLocation(targetWarehouseLocation);
+        var targetWarehouse = _warehouseRepository.GetWarehouseByLocation(targetWarehouseLocation);
         if (targetWarehouse is null)
         {
             return null;

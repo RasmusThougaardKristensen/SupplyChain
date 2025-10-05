@@ -1,4 +1,4 @@
-using SupplyChain.Management.Application.Components;
+using SupplyChain.Management.Application.Repositories;
 using SupplyChain.Management.Domain.LegoSets;
 using SupplyChain.Management.Domain.Warehouses;
 
@@ -6,25 +6,21 @@ namespace SupplyChain.Management.Application.UseCases.Warehouses;
 
 public class GetWarehouseUseCase : IGetWarehouseUseCase
 {
-    private readonly ICsvComponent _csvComponent;
+    private readonly IWarehouseRepository _warehouseRepository;
 
-    public GetWarehouseUseCase(ICsvComponent csvComponent)
+    public GetWarehouseUseCase(IWarehouseRepository warehouseRepository)
     {
-        _csvComponent = csvComponent;
+        _warehouseRepository = warehouseRepository;
     }
 
-    public IReadOnlyList<WarehouseModel> GetWarehouses(Sku sku, StateType stateType)
+    public IReadOnlyList<WarehouseModel> GetWarehousesWithAvailableStockForSkus(IReadOnlyList<Sku> requestedSkus)
     {
-        return _csvComponent.GetWarehouses(sku, stateType);
-    }
+        var warehouses = _warehouseRepository.GetWarehousesWithSkus(requestedSkus);
 
-    public WarehouseModel? GetWarehouseInventory(WarehouseLocation location, int maxQuantity, int minWeight, int maxWeight)
-    {
-        return _csvComponent.GetWarehouseInventory(location, maxQuantity, minWeight, maxWeight);
-    }
+        var warehousesWithAvailableStock = warehouses
+            .Where(warehouse => warehouse.HasAvailableStock(requestedSkus))
+            .ToList();
 
-    public WarehouseModel? GetWarehouseStockSummary(WarehouseLocation location)
-    {
-        return _csvComponent.GetWarehouseStockSummary(location);
+        return warehousesWithAvailableStock;
     }
 }

@@ -1,3 +1,6 @@
+using SupplyChain.Management.Domain.LegoSets;
+using SupplyChain.Management.Domain.Warehouses.Stocks;
+
 namespace SupplyChain.Management.Domain.Warehouses;
 
 public class WarehouseModel
@@ -17,5 +20,17 @@ public class WarehouseModel
         WarehouseId = warehouseId;
         Location = location;
         Inventory = inventory;
+    }
+
+    public bool HasAvailableStock(IReadOnlyList<Sku> requestedSkus)
+    {
+        return GetAvailableStocksForSkus(requestedSkus).Any();
+    }
+
+    private IReadOnlyList<Stock> GetAvailableStocksForSkus(IReadOnlyList<Sku> requestedSkus)
+    {
+        return Inventory.GetStocksWithSkus(requestedSkus)
+            .Where(stock => stock.IsAvailable)
+            .ToList();
     }
 }

@@ -1,6 +1,6 @@
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using SupplyChain.Management.Api.Endpoints.Warehouses;
+using SupplyChain.Management.Api.Endpoints.Warehouses.GetAvailableStock;
 using SupplyChain.Management.Application.UseCases.Shipments;
 using SupplyChain.Management.Domain.LegoSets;
 using SupplyChain.Management.Domain.Warehouses;
