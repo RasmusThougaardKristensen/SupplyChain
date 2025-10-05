@@ -1,5 +1,3 @@
-using System.Globalization;
-using CsvHelper;
 using Microsoft.EntityFrameworkCore;
 using SupplyChain.Management.Application.Repositories;
 using SupplyChain.Management.Domain.LegoSets;
