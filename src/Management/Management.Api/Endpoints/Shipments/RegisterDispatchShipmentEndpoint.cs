@@ -27,9 +27,9 @@ public class RegisterDispatchShipmentEndpoint : ControllerBase
         Description = "Records dispatch of goods from warehouse to customers",
         OperationId = nameof(RegisterDispatchShipmentToCustomer),
         Tags = [Constants.ApiTags.Shipment])]
-    public ActionResult RegisterDispatchShipmentToCustomer([FromRoute] string location, [FromBody] RegisterShipmentRequest request)
+    public async Task<ActionResult<WarehouseResponse>> RegisterDispatchShipmentToCustomer([FromRoute] string location, [FromBody] RegisterShipmentRequest request)
     {
-        var warehouse = _registerShipmentToCustomerUseCase.RegisterDispatchShipmentToCustomer(
+        var warehouse = await  _registerShipmentToCustomerUseCase.RegisterDispatchShipmentToCustomer(
             new WarehouseLocation(location),
             new Sku(request.Stock.Sku),
             request.Stock.Quantity);

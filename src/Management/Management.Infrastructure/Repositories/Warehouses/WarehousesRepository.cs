@@ -1,5 +1,6 @@
 using System.Globalization;
 using CsvHelper;
+using Microsoft.EntityFrameworkCore;
 using SupplyChain.Management.Application.Repositories;
 using SupplyChain.Management.Domain.LegoSets;
 using SupplyChain.Management.Domain.Warehouses;
@@ -9,16 +10,20 @@ namespace SupplyChain.Management.Infrastructure.Repositories.Warehouses;
 
 public class WarehousesRepository : IWarehouseRepository
 {
-    private const string stocksPath = "/Users/rasmuskristensen/RiderProjects/SupplyChain/src/Management/Management.Infrastructure/Repositories/Warehouses/stock.csv";
+    private readonly ManagementDbContext _dbContext;
 
-    public IReadOnlyList<WarehouseModel> GetWarehousesWithSkus(IReadOnlyList<Sku> requestedSkus)
+    public WarehousesRepository(ManagementDbContext dbContext)
     {
-        var stockEntities = ReadStocksFromCsv();
+        _dbContext = dbContext;
+    }
 
-        var availableStocks = stockEntities
-            .Where(stock => requestedSkus.Contains(new Sku(stock.SKU)))
+    public async Task<IReadOnlyList<WarehouseModel>> GetWarehousesWithSkus(IReadOnlyList<Sku> requestedSkus)
+    {
+        var legoSetSkus = requestedSkus.Select(sku => sku.Id).ToHashSet();
+        var availableStocks = await _dbContext.Stock
+            .Where(stock => legoSetSkus.Contains(stock.SKU))
             .GroupBy(stock => stock.Warehouse)
-            .ToList();
+            .ToListAsync();
 
         var warehouses = availableStocks
             .Select(stockInWarehouse =>
@@ -28,22 +33,15 @@ public class WarehousesRepository : IWarehouseRepository
         return warehouses;
     }
 
-    public WarehouseModel? GetWarehouseByLocation(WarehouseLocation location)
+    public async Task<WarehouseModel?> GetWarehouseByLocation(WarehouseLocation location)
     {
-        var stockEntities = ReadStocksFromCsv();
-        var warehouse = stockEntities.FirstOrDefault(stock => stock.Warehouse == location.Id);
+        var warehouse = await _dbContext.Stock.Where(stock => stock.Warehouse == location.Id)
+            .ToListAsync();
 
-        if (warehouse is null)
-        {
-            return null;
-        }
-
-        var stocks = stockEntities.Where(x => x.Warehouse == warehouse.Warehouse);
-
-        return ToModel(stocks, new WarehouseLocation(warehouse.Warehouse));
+        return ToModel(warehouse, location);
     }
 
-    private WarehouseModel ToModel(IEnumerable<StockEntity> stockEntities, WarehouseLocation warehouseLocation)
+    private static WarehouseModel ToModel(IEnumerable<StockEntity> stockEntities, WarehouseLocation warehouseLocation)
     {
         var stocks = new List<Stock>();
         foreach (var stockEntity in stockEntities)
@@ -51,7 +49,7 @@ public class WarehousesRepository : IWarehouseRepository
             var stock = new Stock(
                 new Sku(stockEntity.SKU),
                 stockEntity.Quantity,
-                ParseDeliveryDate(stockEntity.DeliveryDate.ToString()),
+                stockEntity.DeliveryDate,
                 new Uom(stockEntity.Uom),
                 new StockPlacement(stockEntity.Placement, stockEntity.Shelf));
 
@@ -64,33 +62,5 @@ public class WarehousesRepository : IWarehouseRepository
             inventory: inventory);
 
         return warehouse;
-    }
-
-    private DateTime ParseDeliveryDate(string dateString)
-    {
-        if (DateTime.TryParse(dateString, out DateTime result))
-        {
-            return result;
-        }
-
-        string[] formats = { "yyyy-MM-dd" };
-        foreach (var format in formats)
-        {
-            if (DateTime.TryParseExact(dateString, format, CultureInfo.InvariantCulture, DateTimeStyles.None, out result))
-            {
-                return result;
-            }
-        }
-
-        throw new FormatException($"Unable to parse date: {dateString}");
-    }
-    private static IReadOnlyList<StockEntity> ReadStocksFromCsv()
-    {
-        using var reader = new StringReader(File.ReadAllText(stocksPath));
-        using var csv = new CsvReader(reader, CultureInfo.InvariantCulture);
-        csv.Context.RegisterClassMap<StockCsvMap>();
-        var stockEntities = csv.GetRecords<StockEntity>();
-
-        return stockEntities.ToList();
     }
 }

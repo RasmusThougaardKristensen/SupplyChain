@@ -5,5 +5,5 @@ namespace SupplyChain.Management.Application.UseCases.Warehouses;
 
 public interface IGetWarehouseUseCase
 {
-    IReadOnlyList<WarehouseModel> GetWarehousesWithAvailableStockForSkus(IReadOnlyList<Sku> requestedSkus);
+    Task<IReadOnlyList<WarehouseModel>> GetWarehousesWithAvailableStockForSkus(IReadOnlyList<Sku> requestedSkus);
 }

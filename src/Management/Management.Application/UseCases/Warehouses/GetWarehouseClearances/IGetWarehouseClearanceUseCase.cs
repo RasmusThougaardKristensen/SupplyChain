@@ -4,5 +4,5 @@ namespace SupplyChain.Management.Application.UseCases.Warehouses.GetWarehouseCle
 
 public interface IGetWarehouseClearanceUseCase
 {
-    IReadOnlyList<WarehouseClearanceLegoSetDto> GetWarehouseClearance(WarehouseLocation location, int maxQuantity, int minWeight, int maxWeight);
+    Task<IReadOnlyList<WarehouseClearanceLegoSetDto>> GetWarehouseClearance(WarehouseLocation location, int maxQuantity, int minWeight, int maxWeight);
 }

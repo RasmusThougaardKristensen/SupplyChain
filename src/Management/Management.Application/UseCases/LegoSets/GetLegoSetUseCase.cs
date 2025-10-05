@@ -12,8 +12,8 @@ public class GetLegoSetUseCase : IGetLegoSetUseCase
         _legoSetRepository = legoSetRepository;
     }
 
-    public LegoSetModel? GetLegoSetBySku(Sku sku)
+    public async Task<LegoSetModel?> GetLegoSetBySku(Sku sku)
     {
-        return _legoSetRepository.GetLegoSetBySku(sku);
+        return await _legoSetRepository.GetLegoSetBySku(sku);
     }
 }

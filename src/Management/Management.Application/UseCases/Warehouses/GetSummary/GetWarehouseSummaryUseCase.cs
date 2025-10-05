@@ -17,16 +17,16 @@ public class GetWarehouseSummaryUseCase : IGetWarehouseSummaryUseCase
         _warehouseSummaryService = warehouseSummaryService;
     }
 
-    public WarehouseSummaryDto? GetWarehouseStockSummary(WarehouseLocation location)
+    public async Task<WarehouseSummaryDto?> GetWarehouseStockSummary(WarehouseLocation location)
     {
-        var warehouse = _warehouseRepository.GetWarehouseByLocation(location);
+        var warehouse = await _warehouseRepository.GetWarehouseByLocation(location);
 
         if (warehouse is null)
         {
             return null;
         }
         var stockSkus = warehouse.Inventory.Stocks.Select(stock => stock.Sku).ToList();
-        var legoSets = _legoSetRepository.GetLegoSetBySkus(stockSkus);
+        var legoSets = await _legoSetRepository.GetLegoSetBySkus(stockSkus);
 
         return _warehouseSummaryService.GetWarehouseStockSummary(location, warehouse.Inventory.Stocks, legoSets);
     }

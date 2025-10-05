@@ -25,10 +25,10 @@ public class GetWarehousesWithAvailableStockForSkusEndpoint : ControllerBase
         OperationId = nameof(GetWarehousesWithAvailableStocks),
         Tags = [Constants.ApiTags.Warehouse])]
 
-    public ActionResult<IEnumerable<WarehouseResponse>> GetWarehousesWithAvailableStocks([FromQuery] WarehouseStockRequest request)
+    public async Task<ActionResult<IEnumerable<WarehouseResponse>>> GetWarehousesWithAvailableStocks([FromQuery] WarehouseStockRequest request)
     {
         var requestedSkus = request.Skus.Select(sku => new Sku(sku)).ToList();
-        var warehouses = _getWarehouseUseCase.GetWarehousesWithAvailableStockForSkus(requestedSkus);
+        var warehouses = await _getWarehouseUseCase.GetWarehousesWithAvailableStockForSkus(requestedSkus);
         return Ok(warehouses.Select(warehouse => new WarehouseResponse(warehouse)));
     }
 }

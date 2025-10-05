@@ -26,9 +26,9 @@ public class GetWarehousesStockSummaryEndpoint : ControllerBase
         OperationId = nameof(GetWarehouseStockSummary),
         Tags = [Constants.ApiTags.Warehouse])]
 
-    public ActionResult GetWarehouseStockSummary([FromRoute] string location)
+    public async Task<ActionResult<WarehouseResponse>> GetWarehouseStockSummary([FromRoute] string location)
     {
-        var warehouse = _getWarehouseSummaryUseCase.GetWarehouseStockSummary(new WarehouseLocation(location));
+        var warehouse = await _getWarehouseSummaryUseCase.GetWarehouseStockSummary(new WarehouseLocation(location));
 
         if (warehouse is null)
         {

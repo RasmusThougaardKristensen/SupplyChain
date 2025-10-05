@@ -16,9 +16,9 @@ public class GetWarehouseClearanceUseCase : IGetWarehouseClearanceUseCase
         _warehouseClearanceDtoMapper = warehouseClearanceDtoMapper;
     }
 
-    public IReadOnlyList<WarehouseClearanceLegoSetDto> GetWarehouseClearance(WarehouseLocation location, int maxQuantity, int minWeight, int maxWeight)
+    public async Task<IReadOnlyList<WarehouseClearanceLegoSetDto>> GetWarehouseClearance(WarehouseLocation location, int maxQuantity, int minWeight, int maxWeight)
     {
-        var warehouse = _warehouseRepository.GetWarehouseByLocation(location);
+        var warehouse = await _warehouseRepository.GetWarehouseByLocation(location);
         if (warehouse is null)
         {
             return new List<WarehouseClearanceLegoSetDto>();
@@ -29,7 +29,7 @@ public class GetWarehouseClearanceUseCase : IGetWarehouseClearanceUseCase
             .ToList();
 
         var lowStockSkus = lowStockItems.Select(stock => stock.Sku).ToList();
-        var legoSets = _legoSetRepository.GetLegoSetsByWeight(
+        var legoSets = await _legoSetRepository.GetLegoSetsByWeight(
             lowStockSkus,
             minWeight,
             maxWeight);

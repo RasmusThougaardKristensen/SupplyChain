@@ -25,9 +25,9 @@ public class GetLegoSetBySkuEndpoint : ControllerBase
         OperationId = nameof(GetLegoSetBySku),
         Tags = [Constants.ApiTags.LegoSet])]
 
-    public ActionResult<LegoSetResponse> GetLegoSetBySku([FromRoute] string sku)
+    public async Task<ActionResult<LegoSetResponse>> GetLegoSetBySku([FromRoute] string sku)
     {
-        var legoSet = _getLegoSetUseCase.GetLegoSetBySku(new Sku(sku));
+        var legoSet = await _getLegoSetUseCase.GetLegoSetBySku(new Sku(sku));
 
         if (legoSet is null)
         {

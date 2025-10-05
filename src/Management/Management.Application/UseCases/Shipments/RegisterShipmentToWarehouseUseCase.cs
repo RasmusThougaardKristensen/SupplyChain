@@ -14,9 +14,9 @@ public class RegisterShipmentToWarehouseUseCase : IRegisterShipmentToWarehouseUs
         _warehouseRepository = warehouseRepository;
     }
 
-    public WarehouseModel? RegisterReceiptShipmentToWarehouse(WarehouseLocation targetWarehouseLocation, Sku sku, int quantity)
+    public async Task<WarehouseModel?> RegisterReceiptShipmentToWarehouse(WarehouseLocation targetWarehouseLocation, Sku sku, int quantity)
     {
-        var targetWarehouse = _warehouseRepository.GetWarehouseByLocation(targetWarehouseLocation);
+        var targetWarehouse = await _warehouseRepository.GetWarehouseByLocation(targetWarehouseLocation);
         if (targetWarehouse is null)
         {
             return null;

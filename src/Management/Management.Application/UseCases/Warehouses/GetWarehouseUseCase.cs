@@ -13,9 +13,9 @@ public class GetWarehouseUseCase : IGetWarehouseUseCase
         _warehouseRepository = warehouseRepository;
     }
 
-    public IReadOnlyList<WarehouseModel> GetWarehousesWithAvailableStockForSkus(IReadOnlyList<Sku> requestedSkus)
+    public async Task<IReadOnlyList<WarehouseModel>> GetWarehousesWithAvailableStockForSkus(IReadOnlyList<Sku> requestedSkus)
     {
-        var warehouses = _warehouseRepository.GetWarehousesWithSkus(requestedSkus);
+        var warehouses = await _warehouseRepository.GetWarehousesWithSkus(requestedSkus);
 
         var warehousesWithAvailableStock = warehouses
             .Where(warehouse => warehouse.HasAvailableStock(requestedSkus))

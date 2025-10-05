@@ -27,9 +27,9 @@ public class RegisterReceiptShipmentEndpoint : ControllerBase
         Description = "Records receipt of goods arriving at the warehouse from suppliers",
         OperationId = nameof(RegisterReceiptShipmentToWarehouse),
         Tags = [Constants.ApiTags.Shipment])]
-    public ActionResult RegisterReceiptShipmentToWarehouse([FromRoute] string location, [FromBody] RegisterShipmentRequest request)
+    public async Task<ActionResult<WarehouseResponse>> RegisterReceiptShipmentToWarehouse([FromRoute] string location, [FromBody] RegisterShipmentRequest request)
     {
-        var warehouse = _registerShipmentToWarehouseUseCase.RegisterReceiptShipmentToWarehouse(
+        var warehouse = await _registerShipmentToWarehouseUseCase.RegisterReceiptShipmentToWarehouse(
             new WarehouseLocation(location),
             new Sku(request.Stock.Sku),
             request.Stock.Quantity);

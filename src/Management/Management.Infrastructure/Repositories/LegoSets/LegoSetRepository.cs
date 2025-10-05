@@ -1,5 +1,6 @@
 using System.Globalization;
 using CsvHelper;
+using Microsoft.EntityFrameworkCore;
 using SupplyChain.Management.Application.Repositories;
 using SupplyChain.Management.Domain.LegoSets;
 
@@ -7,39 +8,44 @@ namespace SupplyChain.Management.Infrastructure.Repositories.LegoSets;
 
 public sealed class LegoSetRepository : ILegoSetRepository
 {
-    private const string legoSetsPath = "/Users/rasmuskristensen/RiderProjects/SupplyChain/src/Management/Management.Infrastructure/Repositories/Legosets/sets.csv";
+    private readonly ManagementDbContext _dbContext;
 
-
-    public LegoSetModel? GetLegoSetBySku(Sku sku)
+    public LegoSetRepository(ManagementDbContext dbContext)
     {
-        var legoSetEntities = ReadLegoSetsFromCsv();
+        _dbContext = dbContext;
+    }
 
-        var entity = legoSetEntities.FirstOrDefault(setEntity => setEntity.SKU == sku.Id);
+    public async Task<LegoSetModel?> GetLegoSetBySku(Sku sku)
+    {
+        var entity = await _dbContext.LegoSet
+            .AsNoTracking()
+            .SingleOrDefaultAsync(legoSet => legoSet.SKU == sku.Id);
 
         return entity is null ? null : ToModel(entity);
     }
 
-    public IReadOnlyList<LegoSetModel> GetLegoSetBySkus(IReadOnlyList<Sku> skus)
+    public async Task<IReadOnlyList<LegoSetModel>> GetLegoSetBySkus(IReadOnlyList<Sku> requestedSkus)
     {
-        var legoSetEntities = ReadLegoSetsFromCsv();
+        var legoSetSkus = requestedSkus.Select(sku => sku.Id).ToHashSet();
+        var entities = await _dbContext.LegoSet
+            .AsNoTracking()
+            .Where(legoSet => legoSetSkus.Contains(legoSet.SKU))
+            .ToListAsync();
 
-        return legoSetEntities.Where(legoSet => skus.Contains(new Sku(legoSet.SKU)))
-            .Select(ToModel)
-            .ToList();
+        return entities.Select(ToModel).ToList();
     }
 
-    public IReadOnlyList<LegoSetModel> GetLegoSetsByWeight(IReadOnlyList<Sku> requestedSkus, int minWeight, int maxWeight)
+    public async Task<IReadOnlyList<LegoSetModel>> GetLegoSetsByWeight(IReadOnlyList<Sku> requestedSkus, int minWeight, int maxWeight)
     {
-        var legoSetEntities = ReadLegoSetsFromCsv();
+        var legoSetSkus = requestedSkus.Select(sku => sku.Id).ToHashSet();
 
-        var filteredLegoSets = legoSetEntities
-            .Where(legoSet => requestedSkus.Contains(new Sku(legoSet.SKU)))
-            .Where(legoSet => legoSet.Weight >= minWeight
-                              && legoSet.Weight <= maxWeight)
-            .Select(ToModel)
-            .ToList();
+        var filteredLegoSets = await _dbContext.LegoSet
+            .AsNoTracking()
+            .Where(legoSet => legoSetSkus.Contains(legoSet.SKU))
+            .Where(legoSet => legoSet.Weight >= minWeight && legoSet.Weight <= maxWeight)
+            .ToListAsync();
 
-        return filteredLegoSets;
+        return filteredLegoSets.Select(ToModel).ToList();
     }
 
     private LegoSetModel ToModel(LegoSetEntity entity)
@@ -56,14 +62,5 @@ public sealed class LegoSetRepository : ILegoSetRepository
             state: StateType.From(entity.State));
 
         return legoSet;
-    }
-    private static IReadOnlyList<LegoSetEntity> ReadLegoSetsFromCsv()
-    {
-        using var reader = new StringReader(File.ReadAllText(legoSetsPath));
-        using var csv = new CsvReader(reader, CultureInfo.InvariantCulture);
-        csv.Context.RegisterClassMap<LegoSetCsvMap>();
-        var setEntities = csv.GetRecords<LegoSetEntity>();
-
-        return setEntities.ToList();
     }
 }

@@ -5,6 +5,6 @@ namespace SupplyChain.Management.Application.Repositories;
 
 public interface IWarehouseRepository
 {
-    IReadOnlyList<WarehouseModel> GetWarehousesWithSkus(IReadOnlyList<Sku> requestedSkus);
-    WarehouseModel? GetWarehouseByLocation(WarehouseLocation location);
+    Task<IReadOnlyList<WarehouseModel>> GetWarehousesWithSkus(IReadOnlyList<Sku> requestedSkus);
+    Task<WarehouseModel?> GetWarehouseByLocation(WarehouseLocation location);
 }

@@ -26,9 +26,9 @@ public class GetWarehouseClearanceEndpoint : ControllerBase
         OperationId = nameof(GetWarehouseClearance),
         Tags = [Constants.ApiTags.Clearance, Constants.ApiTags.Warehouse])]
 
-    public ActionResult<IEnumerable<WarehouseClearanceResponse>> GetWarehouseClearance([FromRoute] string location, [FromQuery] WarehouseInventoryRequest request)
+    public async Task<ActionResult<IEnumerable<WarehouseClearanceResponse>>> GetWarehouseClearance([FromRoute] string location, [FromQuery] WarehouseInventoryRequest request)
     {
-        var clearanceLegoSets = _getWarehouseClearanceUseCase.GetWarehouseClearance(
+        var clearanceLegoSets = await _getWarehouseClearanceUseCase.GetWarehouseClearance(
             new WarehouseLocation(location),
             request.MaxQuantity,
             request.MinWeight,
