@@ -19,5 +19,8 @@
         "ASPNETCORE_ENVIRONMENT": "Development"
       }
     }
+  },
+  "ConnectionStrings": {
+    "postgresdb": "Host=localhost;Port=5432;Database=supplychainmanagement;"
   }
 }
