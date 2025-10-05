@@ -19,7 +19,7 @@ public class LegoSetEntityConfiguration : IEntityTypeConfiguration<LegoSetEntity
         builder.Property(p => p.ReleaseYear).IsRequired();
         builder.Property(p => p.State).IsRequired();
 
-        builder.HasIndex(p => new { p.Theme, p.Weight, p.State }).IsUnique();
+        builder.HasIndex(p => new { p.Theme, p.Weight, p.State });
 
         builder.HasMany(p => p.Stocks)
             .WithOne()

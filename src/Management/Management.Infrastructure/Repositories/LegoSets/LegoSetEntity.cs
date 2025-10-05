@@ -13,5 +13,5 @@ public sealed class LegoSetEntity
     public required string Uom { get; set; }
     public required string ReleaseYear { get; set; }
     public required string State { get; set; }
-    public required ICollection<StockEntity> Stocks { get; set; }
+    public ICollection<StockEntity> Stocks { get; set; }
 }

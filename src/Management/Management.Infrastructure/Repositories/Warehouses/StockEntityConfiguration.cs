@@ -17,7 +17,7 @@ public class StockEntityConfiguration : IEntityTypeConfiguration<StockEntity>
         builder.Property(p => p.Placement).IsRequired();
         builder.Property(p => p.Shelf).IsRequired();
 
-        builder.HasIndex(p => new { p.Warehouse, p.SKU, p.Quantity }).IsUnique();
+        builder.HasIndex(p => new { p.Warehouse, p.SKU, p.Quantity });
 
         builder.HasOne(s => s.LegoSet)
             .WithMany()
