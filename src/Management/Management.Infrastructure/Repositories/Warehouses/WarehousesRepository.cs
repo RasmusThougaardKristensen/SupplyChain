@@ -51,7 +51,7 @@ public class WarehousesRepository : IWarehouseRepository
             var stock = new Stock(
                 new Sku(stockEntity.SKU),
                 stockEntity.Quantity,
-                ParseDeliveryDate(stockEntity.DeliveryDate),
+                ParseDeliveryDate(stockEntity.DeliveryDate.ToString()),
                 new Uom(stockEntity.Uom),
                 new StockPlacement(stockEntity.Placement, stockEntity.Shelf));
 

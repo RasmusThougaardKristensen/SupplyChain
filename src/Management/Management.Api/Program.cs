@@ -20,7 +20,7 @@ class Program
             options.EnableAnnotations();
         });
 
-        builder.Services.AddRepositories();
+        builder.Services.AddRepositories(builder.Configuration);
         builder.Services.AddComponents();
         builder.Services.AddApplicationServices();
         builder.Services.AddUseCases();
@@ -42,6 +42,8 @@ class Program
         app.UseAuthorization();
 
         app.MapControllers();
+
+        await app.MigrateDatabase();
 
         await app.RunAsync();
     }
